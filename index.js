@@ -1,5 +1,5 @@
 /*
- * pixelpainter - a painting module for grid-based art
+ * gridpaint - a painting module for grid-based art
  * Copyright (C) 2016 Mister Hat
  *
  * This library is free software; you can redistribute it and/or
@@ -106,7 +106,7 @@ function GridPaint(options) {
 
     this.canvas = document.createElement('canvas');
     this.ctx = this.canvas.getContext('2d');
-    this.canvas.className = 'pixelpaint-canvas';
+    this.canvas.className = 'gridpaint-canvas';
     this.canvas.style.cursor = 'crosshair';
 
     if (/firefox/i.test(navigator.userAgent)) {
