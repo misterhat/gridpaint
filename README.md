@@ -26,11 +26,9 @@ painter.palette.forEach(function (colour, i) {
     b.style.color = 'white';
     b.innerText = '\xa0';
     b.title = 'switch to ' + colour;
-
     b.onclick = function () {
         painter.colour = i;
     };
-
     d.appendChild(b);
 });
 
