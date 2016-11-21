@@ -2,6 +2,8 @@
 A canvas for creating grid-based art in the browser. gridpaint supports dynamic
 colour palettes and various tools such as bucket fill and undo.
 
+[![example.js demonstration](./example.png)](http://http://requirebin.com/?gist=misterhat/518814835148aa20a3e3c0aa6acd2d39)
+
 ## Installation
 
     $ npm install --save gridpaint
@@ -14,7 +16,6 @@ var painter = new GridPaint({ width: 26, height: 15, cellWidth: 16 }),
     d, actions;
 
 document.body.appendChild(painter.dom);
-
 d = document.createElement('div');
 d.style.marginBottom = '6px';
 
@@ -33,11 +34,9 @@ painter.palette.forEach(function (colour, i) {
 });
 
 document.body.appendChild(d);
-
 d = document.createElement('div');
 
 actions = [ 'pencil', 'bucket', 'undo', 'redo', 'clear', 'saveAs' ];
-
 actions.forEach(function (action, i) {
     var b = document.createElement('button');
     b.innerText = action;

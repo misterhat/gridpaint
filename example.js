@@ -3,9 +3,7 @@ var GridPaint = require('./');
 var painter = new GridPaint({ width: 26, height: 15, cellWidth: 16 }),
     d, actions;
 
-painter.grid = true;
 document.body.appendChild(painter.dom);
-
 d = document.createElement('div');
 d.style.marginBottom = '6px';
 
@@ -17,20 +15,16 @@ painter.palette.forEach(function (colour, i) {
     b.style.color = 'white';
     b.innerText = '\xa0';
     b.title = 'switch to ' + colour;
-
     b.onclick = function () {
         painter.colour = i;
     };
-
     d.appendChild(b);
 });
 
 document.body.appendChild(d);
-
 d = document.createElement('div');
 
 actions = [ 'pencil', 'bucket', 'undo', 'redo', 'clear', 'saveAs' ];
-
 actions.forEach(function (action, i) {
     var b = document.createElement('button');
     b.innerText = action;
