@@ -1,5 +1,5 @@
 /*
- * gridpaint - a painting module for grid-based art
+ * gridpaint - a canvas for creating grid-based art in the browser
  * Copyright (C) 2016 Mister Hat
  *
  * This library is free software; you can redistribute it and/or
@@ -99,7 +99,7 @@ function GridPaint(options) {
     EventEmitter.call(this);
 
     this.width = options.width || 16;
-    this.height = options.height || options.width;
+    this.height = options.height || this.width;
     this.cellWidth = options.cellWidth || 16;
     this.cellHeight = options.cellHeight || this.cellWidth;
     this.palette = options.palette || DEFAULT_PALETTE;
