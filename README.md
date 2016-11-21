@@ -2,7 +2,7 @@
 A canvas for creating grid-based art in the browser. gridpaint supports dynamic
 colour palettes and various tools such as bucket fill and undo.
 
-[![example.js demonstration](./example.png)](http://http://requirebin.com/?gist=misterhat/518814835148aa20a3e3c0aa6acd2d39)
+[![example.js demonstration](./example.png)](http://requirebin.com/?gist=misterhat/518814835148aa20a3e3c0aa6acd2d39)
 
 ## Installation
 
