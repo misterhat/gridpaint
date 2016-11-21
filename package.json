@@ -1,6 +1,6 @@
 {
   "name": "gridpaint",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "a canvas for creating grid-based art in the browser",
   "main": "index.js",
   "scripts": {
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/misterhat/pixelpaint.git"
+    "url": "git+https://github.com/misterhat/gridpaint.git"
   },
   "keywords": [
     "pixel",
@@ -21,9 +21,9 @@
   "author": "Mister Hat <misterhat144@gmail.com>",
   "license": "LGPL-3.0",
   "bugs": {
-    "url": "https://github.com/misterhat/pixelpaint/issues"
+    "url": "https://github.com/misterhat/gridpaint/issues"
   },
-  "homepage": "https://github.com/misterhat/pixelpaint#readme",
+  "homepage": "https://github.com/misterhat/gridpaint#readme",
   "dependencies": {
     "deep-diff": "^0.3.4",
     "file-saver": "^1.3.3"
