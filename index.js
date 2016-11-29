@@ -18,10 +18,11 @@
  */
 
 var EventEmitter = require('events'),
-    util = require('util'),
 
     FileSaver = require('file-saver'),
     deepDiff = require('deep-diff'),
+    inherits = require('inherits'),
+
     Canvas;
 
 if (process.title !== 'browser') {
@@ -129,7 +130,7 @@ function GridPaint(options) {
     this.clear();
 }
 
-util.inherits(GridPaint, EventEmitter);
+inherits(GridPaint, EventEmitter);
 
 GridPaint.EVENTS = {
     mousemove: function (e) {
