@@ -21,7 +21,19 @@ var EventEmitter = require('events'),
     util = require('util'),
 
     FileSaver = require('file-saver'),
-    deepDiff = require('deep-diff');
+    deepDiff = require('deep-diff'),
+    Canvas;
+
+if (process.title !== 'browser') {
+    Canvas = require('canvas');
+} else {
+    Canvas = function (width, height) {
+        var c = document.createElement('canvas');
+        c.width = width || 300;
+        c.height = height || 150;
+        return c;
+    };
+}
 
 var DEFAULT_PALETTE = [ 'transparent', '#fff', '#c0c0c0', '#808080', '#000',
                         '#f00', '#800', '#ff0', '#808000', '#0f0', '#080',
@@ -29,34 +41,6 @@ var DEFAULT_PALETTE = [ 'transparent', '#fff', '#c0c0c0', '#808080', '#000',
                         '#800080' ];
     MAX_HISTORY = 100;
 
-var events = {
-    mousemove: function (e) {
-        var cw = this.cellWidth,
-            ch = this.cellHeight,
-            x = e.pageX - e.currentTarget.offsetLeft,
-            y = e.pageY - e.currentTarget.offsetTop;
-
-        this.cursor.x = Math.floor(x / this.width * (this.width / cw));
-        this.cursor.y = Math.floor(y / this.height * (this.height / ch));
-
-        if (this.isApplied) {
-            this.action();
-        }
-
-        this.emit('move');
-    },
-    mousedown: function () {
-        // create a clone to compare changes for undo history
-        this.oldPainting = clone(this.painting);
-        this.applyTool(true);
-    },
-    mouseup: function () {
-        if (this.isApplied) {
-            this.applyTool(false);
-            this.compareChanges();
-        }
-    }
-};
 
 function clone(obj) {
     return JSON.parse(JSON.stringify(obj));
@@ -104,28 +88,9 @@ function GridPaint(options) {
     this.cellHeight = options.cellHeight || this.cellWidth;
     this.palette = options.palette || DEFAULT_PALETTE;
 
-    this.canvas = document.createElement('canvas');
+    this.canvas = new Canvas(this.width * this.cellWidth,
+                             this.height * this.cellHeight);
     this.ctx = this.canvas.getContext('2d');
-    this.canvas.className = 'gridpaint-canvas';
-    this.canvas.style.cursor = 'crosshair';
-
-    if (/firefox/i.test(navigator.userAgent)) {
-        this.canvas.style.imageRendering = '-moz-crisp-edges';
-    } else {
-        this.canvas.style.imageRendering = 'pixelated';
-    }
-
-    this.dom = this.canvas;
-
-    this.events = {};
-
-    Object.keys(events).forEach(function (h) {
-        that.events[h] = events[h].bind(that);
-        that.canvas.addEventListener(h, that.events[h], false);
-    });
-
-    // in case the user drags away from the canvas element
-    window.addEventListener('mouseup', that.events.mouseup, false);
 
     // a 2D array of the colour palette indexes
     this.painting = [];
@@ -145,11 +110,55 @@ function GridPaint(options) {
     this.undoHistory = [];
     this.redoHistory = [];
 
-    // cache because creating functions is expensive
-    this.boundDraw = this.draw.bind(this);
+    if (process.title === 'browser') {
+        this.canvas.className = 'gridpaint-canvas';
+        this.canvas.style.cursor = 'crosshair';
+
+        if (/firefox/i.test(navigator.userAgent)) {
+            this.canvas.style.imageRendering = '-moz-crisp-edges';
+        } else {
+            this.canvas.style.imageRendering = 'pixelated';
+        }
+
+        this.dom = this.canvas;
+
+        // cache because creating functions is expensive
+        this.boundDraw = this.draw.bind(this);
+    }
+
+    this.clear();
 }
 
 util.inherits(GridPaint, EventEmitter);
+
+GridPaint.EVENTS = {
+    mousemove: function (e) {
+        var cw = this.cellWidth,
+            ch = this.cellHeight,
+            x = e.pageX - e.currentTarget.offsetLeft,
+            y = e.pageY - e.currentTarget.offsetTop;
+
+        this.cursor.x = Math.floor(x / this.width * (this.width / cw));
+        this.cursor.y = Math.floor(y / this.height * (this.height / ch));
+
+        if (this.isApplied) {
+            this.action();
+        }
+
+        this.emit('move');
+    },
+    mousedown: function () {
+        // create a clone to compare changes for undo history
+        this.oldPainting = clone(this.painting);
+        this.applyTool(true);
+    },
+    mouseup: function () {
+        if (this.isApplied) {
+            this.applyTool(false);
+            this.compareChanges();
+        }
+    }
+};
 
 GridPaint.prototype.resize = function () {
     this.canvas.width = this.width * this.cellWidth;
@@ -267,7 +276,7 @@ GridPaint.prototype.newGridColour = function () {
     }
 };
 
-// compared oldPainting to painting and push the changes to history
+// compared oldPainting to painting & push the changes to history
 GridPaint.prototype.compareChanges = function () {
     var changes = deepDiff.diff(this.oldPainting, this.painting);
 
@@ -310,7 +319,7 @@ GridPaint.prototype.action = function () {
 
 // export the painting to file
 GridPaint.prototype.saveAs = function (file, scale) {
-    var exported = document.createElement('canvas'),
+    var exported = new Canvas(),
         eCtx = exported.getContext('2d');
 
     file = file || 'painting.png';
@@ -320,9 +329,13 @@ GridPaint.prototype.saveAs = function (file, scale) {
     exported.height = this.height * this.cellHeight * scale;
     this.drawPainting(eCtx, scale);
 
-    exported.toBlob(function (blob) {
-        FileSaver.saveAs(blob, file);
-    });
+    if (process.title === 'browser') {
+        exported.toBlob(function (blob) {
+            FileSaver.saveAs(blob, file);
+        });
+    } else {
+        exported.pngStream().pipe(require('fs').createWriteStream('./' + file));
+    }
 };
 
 // draw the checkered pattern to indicate transparency
@@ -383,7 +396,7 @@ GridPaint.prototype.drawCursor = function () {
 };
 
 // draw a properly contrasted grid over the image. if it contains more black
-// than white, the grid colour will be white and vice versa
+// than white, the grid colour will be white & vice versa
 GridPaint.prototype.drawGrid = function () {
     var cw = this.cellWidth,
         ch = this.cellHeight,
@@ -406,7 +419,7 @@ GridPaint.prototype.drawGrid = function () {
     }
 };
 
-// start the drawing loop
+// start the draw loop
 GridPaint.prototype.draw = function () {
     this.drawBackground();
     this.drawPainting();
@@ -416,13 +429,51 @@ GridPaint.prototype.draw = function () {
         this.drawGrid();
     }
 
-    window.requestAnimationFrame(this.boundDraw);
+    if (this.drawing) {
+        window.requestAnimationFrame(this.boundDraw);
+    }
 };
 
+// activate event handlers & start draw loop
 GridPaint.prototype.init = function () {
-    this.resize();
-    this.clear();
+    var that;
+
+    if (process.title !== 'browser') {
+        return;
+    }
+
+    that = this;
+    this.events = {};
+
+    Object.keys(GridPaint.EVENTS).forEach(function (e) {
+        that.events[e] = GridPaint.EVENTS[e].bind(that);
+        that.canvas.addEventListener(e, that.events[e], false);
+    });
+
+    // in case the user drags away from the canvas element
+    window.addEventListener('mouseup', that.events.mouseup, false);
+
+    this.drawing = true;
+
     this.draw();
+};
+
+// remove all the event listeners & cease the draw loop
+GridPaint.prototype.destroy = function () {
+    var that;
+
+    if (process.title !== 'browser') {
+        return;
+    }
+
+    that = this;
+    this.drawing = false;
+
+    Object.keys(GridPaint.EVENTS).forEach(function (e) {
+        that.canvas.removeEventListener(e, that.events[e], false);
+    });
+
+    window.removeEventListener('mouseup', that.events.mouseup, false);
 };
 
 module.exports = GridPaint;

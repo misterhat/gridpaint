@@ -8,7 +8,8 @@ colour palettes and various tools such as bucket fill and undo.
 
     $ npm install --save gridpaint
 
-## Example
+## Examples
+#### Browser
 ```javascript
 var GridPaint = require('gridpaint');
 
@@ -55,6 +56,41 @@ document.body.appendChild(d);
 painter.init();
 ```
 
+#### Server
+```javascript
+var GridPaint = require('gridpaint');
+
+var painter = new GridPaint({ width: 10, height: 10, cellWidth: 16 }),
+    strokes = [
+        { x: 1, y: 1 },
+        { x: 2, y: 1 },
+        { x: 2, y: 2 },
+        { colour: 4, x: 1, y: 2 },
+        { x: 5, y: 1 },
+        { x: 5, y: 2 },
+        { x: 6, y: 1 },
+        { colour: 4, x: 6, y: 2 },
+        { colour: 4, x: 2, y: 5 },
+        { colour: 4, x: 3, y: 5 },
+        { colour: 4, x: 4, y: 5 },
+        { colour: 4, x: 5, y: 5 },
+        { colour: 13, x: 2, y: 6 }
+    ];
+
+painter.tool = 'pencil';
+
+strokes.forEach(function (a) {
+    painter.colour = a.colour || 1;
+    painter.cursor.x = a.x;
+    painter.cursor.y = a.y;
+    painter.action();
+});
+
+painter.saveAs('node.png');
+```
+
+![server-sided rendering demonstration](./node.png)
+
 ## Properties
 All of these properties can be adjusted on the fly and will be applied next
 animation frame.
@@ -82,11 +118,14 @@ painter.grid = false; // display a contrasted grid over the image
 painter.undoHistory = [];
 painter.redoHistory = [];
 
+// whether or not the draw loop is activated (activated after init() is called)
+painter.drawing = true;
+
 painter.dom = HTMLCanvasElement; // the DOM element to append to the document
 ```
 
 ## API
-### GridPaint(options)
+### new GridPaint(options)
 Create a new `painter` instance.
 
 `options` is an optional object that can contain the following properties (see
@@ -131,10 +170,16 @@ Apply the current tool to the canvas.
 ### painter.saveAs([file, scale])
 Export the painting as a PNG file.
 
-`file` is the filename to prompt the user with.
+`file` is the default filename to save to. Default: `"painting.png"`.
 
 `scale` is a Number that describes what scale to resize the saved canvas (`0.5`
-will be half the original, `2` would be twice as large).
+will be half the original, `2` would be twice as large). Default: `1`.
+
+### painter.init()
+Initialize event handlers and start the draw loop (browser only).
+
+### painter.destroy()
+Remove event handlers and cease the draw loop (browser only).
 
 ## Events
 Events share the same names as the methods that trigger them. The following
@@ -147,12 +192,11 @@ methods trigger events:
 ## License
 Copyright (C) 2016 Mister Hat
 
-This library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Lesser General Public
-License as published by the Free Software Foundation; either
-version 2.1 of the License, or (at your option) any later version.
+This library is free software; you can redistribute it and/or modify it under
+the terms of the GNU Lesser General Public License as published by the Free
+Software Foundation; either version 3.0 of the License, or (at your option) any
+later version.
 
-This library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Lesser General Public License for more details.
+This library is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
