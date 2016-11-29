@@ -4,6 +4,8 @@ colour palettes and various tools such as bucket fill and undo.
 
 [![example.js demonstration](./example.png)](http://requirebin.com/?gist=misterhat/518814835148aa20a3e3c0aa6acd2d39)
 
+*Click the image above to test an example!*
+
 ## Installation
 
     $ npm install --save gridpaint
