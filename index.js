@@ -137,8 +137,8 @@ GridPaint.EVENTS = {
         var cw = this.cellWidth,
             ch = this.cellHeight,
             rect = this.canvas.getBoundingClientRect(),
-            x = e.pageX - rect.left,
-            y = e.pageY - rect.top;
+            x = e.pageX - rect.left - window.scrollX,
+            y = e.pageY - rect.top - window.scrollY;
 
         this.cursor.x = Math.floor(x / this.width * (this.width / cw));
         this.cursor.y = Math.floor(y / this.height * (this.height / ch));
