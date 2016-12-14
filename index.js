@@ -136,8 +136,9 @@ GridPaint.EVENTS = {
     mousemove: function (e) {
         var cw = this.cellWidth,
             ch = this.cellHeight,
-            x = e.pageX - e.currentTarget.offsetLeft,
-            y = e.pageY - e.currentTarget.offsetTop;
+            rect = this.canvas.getBoundingClientRect(),
+            x = e.pageX - rect.left,
+            y = e.pageY - rect.top;
 
         this.cursor.x = Math.floor(x / this.width * (this.width / cw));
         this.cursor.y = Math.floor(y / this.height * (this.height / ch));
