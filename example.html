@@ -259,6 +259,10 @@ if (process.browser) {
 
 }).call(this,require('_process'))
 },{"_process":15,"canvas":13}],5:[function(require,module,exports){
+function clone(obj) {
+    return JSON.parse(JSON.stringify(obj));
+}
+
 // empty all of the grid units
 module.exports = function () {
     var i, j;
