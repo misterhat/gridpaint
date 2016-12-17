@@ -1,7 +1,7 @@
 var GridPaint = require('../');
 
 var painter = new GridPaint({ width: 26, height: 15, cellWidth: 16 }),
-    d, actions;
+    d, actions, f, t, b;
 
 document.body.appendChild(painter.dom);
 d = document.createElement('div');
@@ -38,6 +38,32 @@ actions.forEach(function (action, i) {
     d.appendChild(b);
 });
 
+document.body.appendChild(d);
+
+d = document.createElement('div');
+f = document.createElement('select');
+t = document.createElement('select');
+b = document.createElement('button');
+
+b.innerText = 'replace';
+b.onclick = function () {
+    var selects = document.getElementsByTagName('select');
+    painter.replace(selects[0].value, selects[1].value);
+};
+
+painter.palette.forEach(function (c) {
+    var oF = new Option(c),
+        oT = new Option(c);
+
+    oF.style.backgroundColor = c;
+    oT.style.backgroundColor = c;
+    f.appendChild(oF);
+    t.appendChild(oT);
+});
+
+d.appendChild(f);
+d.appendChild(t);
+d.appendChild(b);
 document.body.appendChild(d);
 
 painter.init();

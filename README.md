@@ -4,19 +4,18 @@ colour palettes and various tools such as bucket fill and undo.
 
 [![example.js demonstration](./example.png)](http://requirebin.com/?gist=misterhat/518814835148aa20a3e3c0aa6acd2d39)
 
-*Click the image above to test an example!*
+*Click the image above to test a demonstration!*
 
 ## Installation
 
     $ npm install --save gridpaint
 
-## Examples
-#### Browser
+### examples/browser.js
 ```javascript
 var GridPaint = require('gridpaint');
 
 var painter = new GridPaint({ width: 26, height: 15, cellWidth: 16 }),
-    d, actions;
+    d, actions, f, t, b;
 
 document.body.appendChild(painter.dom);
 d = document.createElement('div');
@@ -55,10 +54,39 @@ actions.forEach(function (action, i) {
 
 document.body.appendChild(d);
 
+d = document.createElement('div');
+f = document.createElement('select');
+t = document.createElement('select');
+b = document.createElement('button');
+
+b.innerText = 'replace';
+b.onclick = function () {
+    var selects = document.getElementsByTagName('select');
+    painter.replace(selects[0].value, selects[1].value);
+};
+
+painter.palette.forEach(function (c) {
+    var oF = new Option(c),
+        oT = new Option(c);
+
+    oF.style.backgroundColor = c;
+    oT.style.backgroundColor = c;
+    f.appendChild(oF);
+    t.appendChild(oT);
+});
+
+d.appendChild(f);
+d.appendChild(t);
+d.appendChild(b);
+document.body.appendChild(d);
+
 painter.init();
 ```
 
-#### Server
+   $ npm run build-example
+   $ sensible-browser example.html
+
+### examples/node.js
 ```javascript
 var GridPaint = require('gridpaint');
 
@@ -91,6 +119,8 @@ strokes.forEach(function (a) {
 painter.saveAs('node.png');
 ```
 
+    $ node examples/node
+
 ![server-sided rendering demonstration](./node.png)
 
 ## Properties
@@ -103,18 +133,18 @@ painter.height = painter.width; // painter height (in cells)
 painter.cellWidth = 16; // the width of each cell
 painter.cellHeight = painter.cellWidth; // the height of each cell
 
+painter.background = true; // draw the checkered transparent background
+painter.colour = 0; // the currently selected colour
+painter.cursor = { x: -1, y: -1 }; // crosshair location
+painter.grid = false; // display a contrasted grid over the image
+painter.isApplied = false; // the status of mousedown
 // colours the image will contain
 painter.palette =  [ 'transparent', '#fff', '#c0c0c0', '#808080', '#000',
                      '#f00', '#800', '#ff0', '#808000', '#0f0', '#080', '#0ff',
                      '#008080', '#00f', '#000080', '#f0f', '#800080' ]
-
 // a 2D array painter.height x painter.width of palette indexes
 painter.painting = [ [], ... ];
-painter.cursor = { x: -1, y: -1 }; // crosshair location
-painter.colour = 0; // the currently selected colour
-painter.isApplied = false; // the status of mousedown
 painter.tool = 'pencil'; // the currently selected tool (pencil or bucket)
-painter.grid = false; // display a contrasted grid over the image
 
 // stacks of deep-diff changes
 painter.undoHistory = [];
@@ -134,12 +164,8 @@ Create a new `painter` instance.
 above property definitions for defaults): `{ width, height, cellWidth,
 cellHeight, palette }`.
 
-### painter.resize()
-Set the painter's <canvas> element to the proper size. Call this if `width`,
-`height`, `cellWidth` or `cellHeight` are adjusted.
-
-### painter.clear()
-Set all of the cells to the first colour in the palette.
+### painter.action()
+Apply the current tool to the canvas.
 
 ### painter.applyTool([isApplied])
 Apply (or unapply) whichever tool is selected to the canvas in the cursor's
@@ -147,9 +173,6 @@ current position.
 
 `isApplied` is a `Boolean` value. If not provided, `isApplied` is toggled
 instead.
-
-### painter.pencil()
-Set the cell in cursor's position to the selected colour.
 
 ### painter.bucket([replace, x, y])
 Fill in surrounding, like-coloured cells.
@@ -160,14 +183,30 @@ and `y` is used.
 `x` and `y` are the coordinates to begin the replacement process. If not
 provided, `cursor` position is used.
 
-### painter.undo()
-Undo the last action since the last tool was applied.
+### painter.clear()
+Set all of the cells to the first colour in the palette.
+
+### painter.destroy()
+Remove event handlers and cease the draw loop (browser only).
+
+### painter.init()
+Initialize event handlers and start the draw loop (browser only).
+
+### painter.pencil()
+Set the cell in cursor's position to the selected colour.
 
 ### painter.redo()
 Redo the last undo action.
 
-### painter.action()
-Apply the current tool to the canvas.
+### painter.replace(old, replace)
+Replace `old` colour with `replace` colour`.
+
+Both arguments can be either the position of a colour on the palette, or a
+string of the colour to be `indexOf`'d.
+
+### painter.resize()
+Set the painter's <canvas> element to the proper size. Call this if `width`,
+`height`, `cellWidth` or `cellHeight` are adjusted.
 
 ### painter.saveAs([file, scale])
 Export the painting as a PNG file.
@@ -177,18 +216,23 @@ Export the painting as a PNG file.
 `scale` is a Number that describes what scale to resize the saved canvas (`0.5`
 will be half the original, `2` would be twice as large). Default: `1`.
 
-### painter.init()
-Initialize event handlers and start the draw loop (browser only).
-
-### painter.destroy()
-Remove event handlers and cease the draw loop (browser only).
+### painter.undo()
+Undo the last action since the last tool was applied.
 
 ## Events
 Events share the same names as the methods that trigger them. The following
 methods trigger events:
 
 ```javascript
-[ 'clear', 'applyTool', 'undo', 'redo', 'action', 'move' ]
+[
+    'action',
+    'applyTool',
+    'clear',
+    'move',
+    'redo',
+    'replace',
+    'undo'
+]
 ```
 
 ## License
