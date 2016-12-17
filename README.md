@@ -83,8 +83,8 @@ document.body.appendChild(d);
 painter.init();
 ```
 
-   $ npm run build-example
-   $ sensible-browser example.html
+    $ npm run build-example
+    $ sensible-browser example.html
 
 ### examples/node.js
 ```javascript
