@@ -1,0 +1,62 @@
+{
+    "env": {
+        "browser": true,
+        "node": true,
+        "es6": true
+    },
+    "parserOptions": {
+        "ecmaVersion": 2018
+    },
+    "extends": "eslint:recommended",
+    "ignorePatterns": [ "*.bundle.js" ],
+    "rules": {
+        // 'use strict';
+        "strict": [ "error", "global" ],
+        // preference, some like 2
+        "indent": [ "warn", 4 ],
+        "linebreak-style": [ "warn", "unix" ],
+        "no-trailing-spaces": [ "warn" ],
+        "quotes": [ "error", "single", { "avoidEscape": true } ],
+        // ASI exists, but it does weird things
+        // to work, most ASI hazards are obvious:
+        //   such as: IIFE, "tagged" template ones.
+        // but ECMA and TC39 are going to be making grammar
+        // decisions that may add more in the future.
+        "semi": [ "error", "always" ],
+        "no-console": [ "warn",  { "allow": [ "error" ] } ],
+        // let x = 'x', y = { x, someotherprop: 'y', } // y.x = 'x'
+        "object-shorthand": [ "error" ],
+        // only wrap property names in quotes for names that need it
+        // eg 'asd-xyz': 'value' NOT 'asd': value; should just be asd: 'value'
+        "quote-props": [ "error", "as-needed" ],
+        // it's EXTREMELY unlikely you meant 
+        // to not return in an array prototype like map
+        "array-callback-return": [ "error" ],
+        // fun(...args) over fun() { ...arguments[x]...; }
+        "prefer-rest-params": [ "error" ],
+        // easier than Function#apply
+        // fun(...someArr)
+        "prefer-spread": [ "error" ],
+        // let { x, y } = obj;
+        // [ , x.matched ] = 'xyz'.match(/x(y)z/);
+        // ({ a, b, c } = { a: 1, b: 2, c: 3 });
+        "prefer-destructuring": [ "error", { 
+            "AssignmentExpression": {
+                "object": false,
+                "array": false
+            } 
+        }],
+        // if (x) {
+        //   something();
+        // }
+        // else {
+        //   somethingElse();
+        // }
+        "brace-style": [ "error", "stroustrup" ],
+        "spaced-comment": [ "error" ], 
+        "space-before-blocks": [ "error" ],
+        "keyword-spacing": [ "error" ],
+        "comma-dangle": [ "error", "always-multiline" ],
+        "no-var": [ "warn" ]
+    }
+}

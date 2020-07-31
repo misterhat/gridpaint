@@ -17,20 +17,23 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-var EventEmitter = require('events'),
+'use strict';
 
-    inherits = require('inherits'),
+const EventEmitter = require('events');
 
-    Canvas = require('./lib/canvas'),
-    draw = require('./lib/draw'),
-    handlers = require('./lib/handlers'),
-    save = require('./lib/save'),
-    tools = require('./lib/tools');
+const inherits = require('inherits');
 
-var DEFAULT_PALETTE = [ 'transparent', '#fff', '#c0c0c0', '#808080', '#000',
-                        '#f00', '#800', '#ff0', '#808000', '#0f0', '#080',
-                        '#0ff', '#008080', '#00f', '#000080', '#f0f',
-                        '#800080' ];
+const Canvas = require('./lib/canvas');
+const draw = require('./lib/draw');
+const handlers = require('./lib/handlers');
+const save = require('./lib/save');
+const tools = require('./lib/tools');
+
+const DEFAULT_PALETTE = [
+    'transparent', '#fff', '#c0c0c0', '#808080', '#000',
+    '#f00', '#800', '#ff0', '#808000', '#0f0', '#080',
+    '#0ff', '#008080', '#00f', '#000080', '#f0f', '#800080',
+];
 
 function GridPaint(options) {
     // use as a constructor without `new`
@@ -47,13 +50,16 @@ function GridPaint(options) {
     this.cellHeight = options.cellHeight || this.cellWidth;
     this.palette = options.palette || DEFAULT_PALETTE;
 
-    this.canvas = new Canvas(this.width * this.cellWidth,
-                             this.height * this.cellHeight);
+    this.canvas = new Canvas(
+        this.width * this.cellWidth,
+        this.height * this.cellHeight,
+    );
     this.ctx = this.canvas.getContext('2d');
 
     this.background = true;
     this.colour = 0;
     this.cursor = { x: -1, y: -1 };
+    this.outline = options.outline || false;
     this.grid = false;
     this.gridColour = '#000';
     this.isApplied = false;
@@ -61,6 +67,7 @@ function GridPaint(options) {
     this.redoHistory = [];
     this.tool = 'pencil';
     this.undoHistory = [];
+    this.autoStopDrawing = true;
 
     if (process.browser) {
         this.canvas.className = 'gridpaint-canvas';
@@ -68,8 +75,14 @@ function GridPaint(options) {
 
         if (/firefox/i.test(navigator.userAgent)) {
             this.canvas.style.imageRendering = '-moz-crisp-edges';
-        } else {
+        }
+        else {
             this.canvas.style.imageRendering = 'pixelated';
+        }
+
+        if (this.outline) {
+            this.canvas.style.outlineStyle = 'solid';
+            this.canvas.style.outlineWidth = '2px';
         }
 
         this.dom = this.canvas;
