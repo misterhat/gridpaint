@@ -1,6 +1,6 @@
 {
   "name": "gridpaint",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "a canvas for creating grid-based art in the browser",
   "main": "index.js",
   "scripts": {

@@ -67,7 +67,7 @@ function GridPaint(options) {
     this.redoHistory = [];
     this.tool = 'pencil';
     this.undoHistory = [];
-    this.autoStopDrawing = true;
+    this.autoStopDrawing = options.autoStopDrawing !== false ? true : false;
 
     if (process.browser) {
         this.canvas.className = 'gridpaint-canvas';
