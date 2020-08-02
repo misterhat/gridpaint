@@ -1,11 +1,12 @@
 {
   "name": "gridpaint",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "a canvas for creating grid-based art in the browser",
   "main": "index.js",
   "scripts": {
-    "test": "node test.js",
-    "build-example": "browserify examples/browser.js | indexhtmlify --title gridpaint > example.html"
+    "prepublish": "npx browserify examples/browser.js | npx indexhtmlify --title gridpaint > example.html",
+    "build-example": "npx browserify examples/browser.js | npx indexhtmlify --title gridpaint > example.html",
+    "test": "node test.js"
   },
   "repository": {
     "type": "git",
