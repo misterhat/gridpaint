@@ -35,7 +35,7 @@ painter.palette.forEach(function (colour, i) {
 document.body.appendChild(d);
 d = document.createElement('div');
 
-actions = [ 'pencil', 'bucket', 'undo', 'redo', 'clear', 'saveAs' ];
+actions = [ 'pencil', 'line', 'bucket', 'undo', 'redo', 'clear', 'saveAs' ];
 actions.forEach(function (action, i) {
     const b = document.createElement('button');
     b.innerText = action;
