@@ -109,6 +109,7 @@ GridPaint.prototype.resize = function (w = 0, h = 0) {
 
 GridPaint.prototype.fitToWindow = function() {
     if (!process.browser) return;
+    if (!this.canvas.parentNode) return;
     const expectedWidth = this.origCellW * this.width;
     const aspectRatio = this.cellWidth / this.cellHeight;
     const parentWidth = this.canvas.parentNode.clientWidth;
