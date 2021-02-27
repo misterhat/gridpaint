@@ -111,22 +111,24 @@ GridPaint.prototype.fitToWindow = function() {
     if (!process.browser) return;
     const expectedWidth = this.origCellW * this.width;
     const aspectRatio = this.cellWidth / this.cellHeight;
+    const parentWidth = this.canvas.parentNode.clientWidth;
+    const canWidth = this.canvas.width;
 
-    if (this.canvas.width > window.innerWidth) {
-        const newW = window.innerWidth - this.cellWidth;
+    if (canWidth > parentWidth) {
+        const newW = parentWidth;
         const newcw = newW / this.width;
         const newch = newcw / aspectRatio;
         this.resize(newcw, newch);
     }
-    else if (this.canvas.width < expectedWidth &&
-             (window.innerWidth - this.cellWidth) < expectedWidth) {
-        const newW = window.innerWidth - this.cellWidth;
+    else if (canWidth    < expectedWidth &&
+             parentWidth < expectedWidth) {
+        const newW = parentWidth;
         const newcw = newW / this.width;
         const newch = newcw / aspectRatio;
         this.resize(newcw, newch);
     }
-    else if (expectedWidth > this.canvas.width &&
-             expectedWidth < (window.innerWidth - this.origCellW)) {
+    else if (expectedWidth > canWidth &&
+             expectedWidth < parentWidth) {
         this.resize(this.origCellW, this.origCellH);
     }
 };
