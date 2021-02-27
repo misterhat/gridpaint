@@ -2,7 +2,7 @@
 
 const GridPaint = require('../');
 
-const painter = new GridPaint({ width: 26, height: 15, cellWidth: 16 });
+const painter = new GridPaint({ width: 40, height: 20, cellWidth: 16 });
 let d, actions, f, t, b;
 
 document.body.appendChild(painter.dom);

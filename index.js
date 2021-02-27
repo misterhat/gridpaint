@@ -1,6 +1,7 @@
 /*
  * gridpaint - a canvas for creating grid-based art in the browser
  * Copyright (C) 2016 Mister Hat
+ * Copyright (C) 2020 Anthony DeDominic
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -48,6 +49,8 @@ function GridPaint(options) {
     this.height = options.height || this.width;
     this.cellWidth = options.cellWidth || 16;
     this.cellHeight = options.cellHeight || this.cellWidth;
+    this.origCellW = this.cellWidth;
+    this.origCellH = this.cellHeight;
     this.palette = options.palette || DEFAULT_PALETTE;
 
     this.canvas = new Canvas(
@@ -67,11 +70,11 @@ function GridPaint(options) {
     this.redoHistory = [];
     this.tool = 'pencil';
     this.undoHistory = [];
-    this.autoStopDrawing = options.autoStopDrawing !== false ? true : false;
 
     if (process.browser) {
         this.canvas.className = 'gridpaint-canvas';
         this.canvas.style.cursor = 'crosshair';
+        this.canvas.style.touchAction = 'none';
 
         if (/firefox/i.test(navigator.userAgent)) {
             this.canvas.style.imageRendering = '-moz-crisp-edges';
@@ -87,7 +90,7 @@ function GridPaint(options) {
 
         this.dom = this.canvas;
 
-        // cache because creating functions is expensive
+        // Used for requestAnimationFrame
         this.boundDraw = this.draw.bind(this);
     }
 
@@ -96,9 +99,36 @@ function GridPaint(options) {
 
 inherits(GridPaint, EventEmitter);
 
-GridPaint.prototype.resize = function () {
-    this.canvas.width = this.width * this.cellWidth;
-    this.canvas.height = this.height * this.cellHeight;
+GridPaint.prototype.resize = function (w = 0, h = 0) {
+    this.canvas.width =  this.width  * (w || this.cellWidth);
+    this.canvas.height = this.height * (h || this.cellHeight);
+    this.cellWidth = (w || this.cellWidth);
+    this.cellHeight = (h || this.cellHeight);
+    this.draw();
+};
+
+GridPaint.prototype.fitToWindow = function() {
+    if (!process.browser) return;
+    const expectedWidth = this.origCellW * this.width;
+    const aspectRatio = this.cellWidth / this.cellHeight;
+
+    if (this.canvas.width > window.innerWidth) {
+        const newW = window.innerWidth - this.cellWidth;
+        const newcw = newW / this.width;
+        const newch = newcw / aspectRatio;
+        this.resize(newcw, newch);
+    }
+    else if (this.canvas.width < expectedWidth &&
+             (window.innerWidth - this.cellWidth) < expectedWidth) {
+        const newW = window.innerWidth - this.cellWidth;
+        const newcw = newW / this.width;
+        const newch = newcw / aspectRatio;
+        this.resize(newcw, newch);
+    }
+    else if (expectedWidth > this.canvas.width &&
+             expectedWidth < (window.innerWidth - this.origCellW)) {
+        this.resize(this.origCellW, this.origCellH);
+    }
 };
 
 // perform the current tool's action on the painting
@@ -133,7 +163,9 @@ GridPaint.prototype.detachHandlers = handlers.detach;
 // attach handlers & start draw loop
 GridPaint.prototype.init = function () {
     this.attachHandlers();
-    this.drawing = true;
+    this.fitToWindow();
+    // Let pointerenter start this.
+    // this.drawing = true;
     this.draw();
 };
 
