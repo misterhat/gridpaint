@@ -24,7 +24,7 @@ async function convertToPng(canvas: any): Promise<Buffer> {
 
 // export the painting to file
 function save(this: gp, file?: string, scale = 1):
-Promise<null|Blob|Buffer> | undefined {
+Promise<null|Blob|Buffer> {
     const exported: HTMLCanvasElement = Canvas(
         this.width * this.cellWidth,
         this.height * this.cellHeight,
@@ -32,7 +32,9 @@ Promise<null|Blob|Buffer> | undefined {
     const eCtx = exported.getContext('2d');
     if (eCtx === null) {
         console.error('<GridPaint>#save() -> Could not get 2d Context.');
-        return;
+        return Promise.reject(
+            '<GridPaint>#save() -> Could not get 2d Context.',
+        );
     }
 
     file = file ?? 'painting.png';
@@ -54,6 +56,9 @@ Promise<null|Blob|Buffer> | undefined {
                 }
                 else {
                     console.error('<GridPaint>#save() -> Blob should not be null!');
+                    return Promise.reject(
+                        '<GridPaint>#save() -> Blob should not be null!',
+                    );
                 }
             });
         }
@@ -62,6 +67,7 @@ Promise<null|Blob|Buffer> | undefined {
         // file in this nonbrowser context should be a write stream
         return convertToPng((eCtx as any).bitmap);
     }
+    return Promise.resolve(null);
 }
 
 export { save };

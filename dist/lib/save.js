@@ -53,7 +53,7 @@ function save(file, scale = 1) {
     const eCtx = exported.getContext('2d');
     if (eCtx === null) {
         console.error('<GridPaint>#save() -> Could not get 2d Context.');
-        return;
+        return Promise.reject('<GridPaint>#save() -> Could not get 2d Context.');
     }
     file = file !== null && file !== void 0 ? file : 'painting.png';
     this.drawPainting(scale, eCtx);
@@ -72,6 +72,7 @@ function save(file, scale = 1) {
                 }
                 else {
                     console.error('<GridPaint>#save() -> Blob should not be null!');
+                    return Promise.reject('<GridPaint>#save() -> Blob should not be null!');
                 }
             });
         }
@@ -80,5 +81,6 @@ function save(file, scale = 1) {
         // file in this nonbrowser context should be a write stream
         return convertToPng(eCtx.bitmap);
     }
+    return Promise.resolve(null);
 }
 exports.save = save;
