@@ -1,3 +1,2 @@
 node_modules
-index.html
-example.html
+dist/index.bundle.js.LICENSE.txt

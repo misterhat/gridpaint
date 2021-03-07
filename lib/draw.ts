@@ -1,36 +1,38 @@
+// Copyright (C) 2016  Zorian Medwin
+// Copyright (C) 2021  Anthony DeDominic
+// See COPYING for License
+
+import type { GridPaint as gp } from '../index';
+
 // draw the checkered pattern to indicate transparency
-'use strict';
-
-exports.background = function () {
+function background(this: gp): void {
     let odd = false;
-    let cw = this.cellWidth;
-    let ch = this.cellHeight;
-    let i, j;
+    const cw = this.cellWidth;
+    const ch = this.cellHeight;
 
-    for (i = 0; i < this.width * 2; i += 1) {
-        for (j = 0; j < this.height * 2; j += 1) {
+    for (let i = 0; i < this.width * 2; i += 1) {
+        for (let j = 0; j < this.height * 2; j += 1) {
             this.ctx.fillStyle = odd ? '#999999' : '#666666';
             this.ctx.fillRect(i * (cw / 2), j * (ch / 2), cw / 2, ch / 2);
             odd = !odd;
         }
         odd = !odd;
     }
-};
+}
 
 // overlap the current colour as a crosshair over the position it will be
 // applied to
 //
 // If this.previous_point is defined, this draws a Line of cursors to current
 // cursor point.
-exports.cursor = function () {
-    let cw, ch;
-
+function cursor(this: gp): void {
     if (this.cursor.x < 0 || this.cursor.y < 0) {
         return;
     }
 
-    cw = this.cellWidth;
-    ch = this.cellHeight;
+    const cw = this.cellWidth;
+    const ch = this.cellHeight;
+
     for (const { x, y } of this.line_approx(this.cursor.x, this.cursor.y)) {
         this.ctx.globalAlpha = 0.8;
         this.ctx.fillStyle = this.palette[this.colour];
@@ -38,55 +40,56 @@ exports.cursor = function () {
         this.ctx.fillRect(x * cw, y * ch + ch / 4, cw, ch / 2);
         this.ctx.globalAlpha = 1;
     }
-};
+}
 
 // draw contrasting grid units
-exports.grid = function () {
-    let cw = this.cellWidth;
-    let ch = this.cellHeight;
-    let i;
+function grid(this: gp): void {
+    const cw = this.cellWidth;
+    const ch = this.cellHeight;
 
     this.ctx.strokeStyle = this.gridColour;
 
-    for (i = 0; i < this.width; i += 1) {
+    for (let i = 0; i < this.width; i += 1) {
         this.ctx.beginPath();
         this.ctx.moveTo(i * cw + 0.5, 0);
         this.ctx.lineTo(i * cw + 0.5, ch * this.height);
         this.ctx.stroke();
     }
 
-    for (i = 0; i < this.height; i += 1) {
+    for (let i = 0; i < this.height; i += 1) {
         this.ctx.beginPath();
         this.ctx.moveTo(0, i * ch + 0.5);
         this.ctx.lineTo(cw * this.width, i * ch + 0.5);
         this.ctx.stroke();
     }
-};
+}
 
-// draw the grid units onto a canvas
-exports.painting = function (ctx, scale) {
-    let cw = this.cellWidth;
-    let ch = this.cellHeight;
-    let i, j;
+/**
+ * Draw the grid units onto a canvas.
+ *
+ * @param scale size scaling, probably useless
+ * @param ctx   the canvas context to draw on.
+ */
+function painting(this: gp, scale = 1, ctx?: CanvasRenderingContext2D): void {
+    const cw = this.cellWidth;
+    const ch = this.cellHeight;
+    const local_ctx = ctx ?? this.ctx;
 
-    // this is just so we can re-use this function on the export
-    ctx = ctx || this.ctx;
-    scale = scale || 1;
+    for (let i = 0; i < this.height; i += 1) {
+        for (let j = 0; j < this.width; j += 1) {
+            local_ctx.fillStyle =
+                this.palette[this.painting[i][j]] ?? 'rgba(0,0,0,0)';
 
-    for (i = 0; i < this.height; i += 1) {
-        for (j = 0; j < this.width; j += 1) {
-            ctx.fillStyle =
-                this.palette[this.painting[i][j]] || 'rgba(0,0,0,0)';
-
-            ctx.fillRect(
+            local_ctx.fillRect(
                 j * cw * scale, i * ch * scale, cw * scale,
                 ch * scale,
             );
         }
     }
-};
+}
 
-exports.tick = function () {
+// draw loop
+function tick(this: gp): void {
     if (this.background) {
         this.drawBackground();
     }
@@ -104,4 +107,6 @@ exports.tick = function () {
     if (this.drawing) {
         window.requestAnimationFrame(this.boundDraw);
     }
-};
+}
+
+export { background, cursor, grid, painting, tick };

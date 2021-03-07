@@ -5,9 +5,16 @@
         "es6": true
     },
     "parserOptions": {
-        "ecmaVersion": 2018
+        "ecmaVersion": 2020
     },
-    "extends": "eslint:recommended",
+    "parser": "@typescript-eslint/parser",
+    "plugins": [
+        "@typescript-eslint"
+    ],
+    "extends": [
+        "eslint:recommended",
+        "plugin:@typescript-eslint/recommended"
+    ],
     "ignorePatterns": [ "*.bundle.js" ],
     "rules": {
         // 'use strict';
@@ -53,10 +60,12 @@
         //   somethingElse();
         // }
         "brace-style": [ "error", "stroustrup" ],
-        "spaced-comment": [ "error" ], 
+        "spaced-comment": [ "error" ],
         "space-before-blocks": [ "error" ],
         "keyword-spacing": [ "error" ],
         "comma-dangle": [ "error", "always-multiline" ],
-        "no-var": [ "warn" ]
+        "no-var": [ "warn" ],
+        "@typescript-eslint/no-explicit-any": [ "off" ],
+        "@typescript-eslint/no-empty-function": [ "off" ]
     }
 }
