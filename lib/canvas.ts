@@ -2,7 +2,7 @@
 // Copyright (C) 2021  Anthony DeDominic
 // See COPYING for License
 
-import { PImage } from 'pureimage';
+import * as PImage from 'pureimage';
 import { isBrowser } from './browser';
 
 let Canvas: (w: number, h: number) => HTMLCanvasElement;
