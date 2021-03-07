@@ -8,8 +8,7 @@
     "dist/*"
   ],
   "scripts": {
-    "prepack": "npx tsc",
-    "build-example": "npx webpack-cli",
+    "prepack": "npx tsc && npx webpack-cli",
     "test-browser": "xdg-open docs/index.html"
   },
   "repository": {

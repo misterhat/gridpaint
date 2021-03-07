@@ -27,8 +27,10 @@ function fitToWindow(this: gp): void {
         const newch = newcw / aspectRatio;
         this.resize(newcw, newch);
     }
-    else if (canWidth    < expectedWidth &&
-        parentWidth < expectedWidth) {
+    else if (
+        canWidth    < expectedWidth &&
+        parentWidth < expectedWidth
+    ) {
         const newW = parentWidth;
         const newcw = newW / this.width;
         const newch = newcw / aspectRatio;
