@@ -1,10 +1,14 @@
-// fill in surrounding, like-coloured grid units
-module.exports = function (replace, x, y) {
-    var colour = this.colour;
+// Copyright (C) 2017  Anthony DeDominic
+// See COPYING for License
 
-    x = typeof x !== 'undefined' ? x : this.cursor.x;
-    y = typeof y !== 'undefined' ? y : this.cursor.y;
-    replace = typeof replace !== 'undefined' ? replace : this.painting[y][x];
+import type { GridPaint as gp } from '../index';
+
+function bucket(this: gp, replace?: number, x?: number, y?: number): void {
+    const colour = this.colour;
+
+    x = x !== undefined ? x : this.cursor.x;
+    y = y !== undefined ? y : this.cursor.y;
+    replace = replace !== undefined ? replace : this.painting[y][x];
 
     if (replace === colour || this.painting[y][x] !== replace) {
         return;
@@ -27,4 +31,6 @@ module.exports = function (replace, x, y) {
     if ((x - 1) > -1) {
         this.bucket(replace, x - 1, y);
     }
-};
+}
+
+export { bucket };

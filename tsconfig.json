@@ -1,0 +1,19 @@
+{
+    "extends": "@tsconfig/node14/tsconfig.json",
+    "compilerOptions": {
+        "declaration": true,
+        "outDir": "./dist/",
+        "noImplicitAny": true,
+        "moduleResolution": "node",
+        "target": "es6",
+        "lib": [
+            "es6",
+            "dom"
+        ],
+        "paths": {
+            "*": [ "./node_modules/*" ]
+        },
+        "allowJs": true
+    },
+    "include": [ "./lib/*", "./index.ts" ]
+}

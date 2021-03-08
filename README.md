@@ -2,128 +2,36 @@
 A canvas for creating grid-based art in the browser. gridpaint supports dynamic
 colour palettes and various tools such as bucket fill and undo.
 
-[![example.js demonstration](./example.png)](http://requirebin.com/?gist=misterhat/518814835148aa20a3e3c0aa6acd2d39)
+[![examples/browser.js demonstration](./example.png)](https://adedomin.github.io/gridpaint/docs/index.html)
 
 *Click the image above to test a demonstration!*
 
-## Installation
-
-    $ npm install --save gridpaint
-
-### examples/browser.js
-```javascript
-var GridPaint = require('gridpaint');
-
-var painter = new GridPaint({ width: 26, height: 15, cellWidth: 16 }),
-    d, actions, f, t, b;
-
-document.body.appendChild(painter.dom);
-d = document.createElement('div');
-d.style.marginBottom = '6px';
-
-painter.palette.forEach(function (colour, i) {
-    var b = document.createElement('button');
-    b.style.backgroundColor = colour;
-    b.style.border = '1px solid #000';
-    b.style.marginRight = '4px';
-    b.style.color = 'white';
-    b.innerText = '\xa0';
-    b.title = 'switch to ' + colour;
-    b.onclick = function () {
-        painter.colour = i;
-    };
-    d.appendChild(b);
-});
-
-document.body.appendChild(d);
-d = document.createElement('div');
-
-actions = [ 'pencil', 'bucket', 'undo', 'redo', 'clear', 'saveAs' ];
-actions.forEach(function (action, i) {
-    var b = document.createElement('button');
-    b.innerText = action;
-    b.onclick = function () {
-        if (i < 2) {
-            painter.tool = action;
-        } else {
-            painter[action]();
-        }
-    };
-    d.appendChild(b);
-});
-
-document.body.appendChild(d);
-
-d = document.createElement('div');
-f = document.createElement('select');
-t = document.createElement('select');
-b = document.createElement('button');
-
-b.innerText = 'replace';
-b.onclick = function () {
-    var selects = document.getElementsByTagName('select');
-    painter.replace(selects[0].value, selects[1].value);
-};
-
-painter.palette.forEach(function (c) {
-    var oF = new Option(c),
-        oT = new Option(c);
-
-    oF.style.backgroundColor = c;
-    oT.style.backgroundColor = c;
-    f.appendChild(oF);
-    t.appendChild(oT);
-});
-
-d.appendChild(f);
-d.appendChild(t);
-d.appendChild(b);
-document.body.appendChild(d);
-
-painter.init();
-```
+You can build/rebuild the example locally with:
 
     $ npm run build-example
-    $ sensible-browser example.html
+    $ xdg-open docs/index.html
+
+## Installation
+
+    $ npm install --save github:adedomin/gridpaint
+
+### examples/browser.js
+
+For an understanding of how to use GridPaint in the canvas, see:
+
+[examples/browser.js](./examples/browser.js);
+
+It contains documentation on how to use the canvas.
 
 ### examples/node.js
-```javascript
-var GridPaint = require('gridpaint');
 
-var painter = new GridPaint({ width: 10, height: 10, cellWidth: 16 }),
-    strokes = [
-        { x: 1, y: 1 },
-        { x: 2, y: 1 },
-        { x: 2, y: 2 },
-        { colour: 4, x: 1, y: 2 },
-        { x: 5, y: 1 },
-        { x: 5, y: 2 },
-        { x: 6, y: 1 },
-        { colour: 4, x: 6, y: 2 },
-        { colour: 4, x: 2, y: 5 },
-        { colour: 4, x: 3, y: 5 },
-        { colour: 4, x: 4, y: 5 },
-        { colour: 4, x: 5, y: 5 },
-        { colour: 13, x: 2, y: 6 }
-    ];
-
-painter.tool = 'pencil';
-
-strokes.forEach(function (a) {
-    painter.colour = a.colour || 1;
-    painter.cursor.x = a.x;
-    painter.cursor.y = a.y;
-    painter.action();
-});
-
-painter.saveAs('node.png');
-```
-
-    $ node examples/node
+To be filled/updated.
 
 ![server-sided rendering demonstration](./node.png)
 
-## Properties
+^-- Example of an image made with pureimage on node.
+
+## Properties (Outdated, to be updated.)
 All of these properties can be adjusted on the fly and will be applied next
 animation frame.
 
@@ -156,7 +64,7 @@ painter.drawing = true;
 painter.dom = HTMLCanvasElement; // the DOM element to append to the document
 ```
 
-## API
+## API (Outdated, to be updated.)
 ### new GridPaint(options)
 Create a new `painter` instance.
 
