@@ -4,9 +4,12 @@ import { replace } from './replace';
 import { line, line_approx } from './line';
 import type { GridPaint as gp } from '../index';
 declare function apply(this: gp, isApplied?: boolean): void;
+/** compared oldPainting to painting & push the changes to history
+ * @param state any object that returns on undo/redo.
+ */
 declare function compare(this: gp): void;
-declare type GridPaintActionTools = 'pencil' | 'bucket' | 'line';
-declare type GridPaintTools = 'clear' | 'undo' | 'redo';
+type GridPaintActionTools = 'pencil' | 'bucket' | 'line';
+type GridPaintTools = 'clear' | 'undo' | 'redo';
 declare function pencil(this: gp): void;
 declare function redo(this: gp): void;
 declare function undo(this: gp): void;

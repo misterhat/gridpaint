@@ -71,8 +71,8 @@ class GridPaint {
     painting: number[][] = [[]];
     // Clear tool backup for redo/undo
     oldPainting: number[][] = [[]];
-    redoHistory: any[] = [];
-    undoHistory: any[] = [];
+    redoHistory: number[][][] = [];
+    undoHistory: number[][][] = [];
 
     events: GridPaintHandlers;
     resizeEvent: (this: GridPaint) => void;

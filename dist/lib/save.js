@@ -4,7 +4,11 @@
 // See COPYING for License
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
 }) : (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     o[k2] = m[k];
@@ -49,7 +53,7 @@ function convertToPng(canvas) {
 }
 // export the painting to file
 function save(file, scale = 1) {
-    const exported = canvas_1.Canvas(this.width * this.cellWidth, this.height * this.cellHeight);
+    const exported = (0, canvas_1.Canvas)(this.width * this.cellWidth, this.height * this.cellHeight);
     const eCtx = exported.getContext('2d');
     if (eCtx === null) {
         console.error('<GridPaint>#save() -> Could not get 2d Context.');

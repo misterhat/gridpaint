@@ -2,8 +2,6 @@
 // Copyright (C) 2021  Anthony DeDominic
 // See COPYING for License
 
-import * as deepDiff from 'deep-diff';
-
 import { bucket } from './bucket';
 import { clear } from './clear';
 import { replace } from './replace';
@@ -11,28 +9,22 @@ import { line, line_approx } from './line';
 
 import type { GridPaint as gp } from '../index';
 
-const MAX_HISTORY = 99;
+const MAX_HISTORY = 64;
 
 function clone(obj: any): any {
     return JSON.parse(JSON.stringify(obj));
 }
 
-function pushHistory(this: gp, top: any, bottom: any, doChange: any): void {
-    if (!top.length) {
+function pushHistory(this: gp, top: number[][][], bottom: number[][][]): void {
+    if (top.length === 0) {
         return;
     }
-
-    const changes = top.pop();
-
-    bottom.push(clone(changes));
-
-    if (!changes) {
+    const top_canvas = top.pop();
+    if (top_canvas == null) {
         return;
     }
-
-    changes.forEach((change: any) => {
-        doChange(this.painting, this.painting, change);
-    });
+    bottom.push(this.painting.splice(0, this.painting.length));
+    this.painting = top_canvas;
 }
 
 // activated when the user's finger or mouse is pressed
@@ -50,23 +42,19 @@ function apply(this: gp, isApplied?: boolean): void {
     }
 }
 
-// compared oldPainting to painting & push the changes to history
+/** compared oldPainting to painting & push the changes to history
+ * @param state any object that returns on undo/redo.
+ */
 function compare(this: gp): void {
-    let changes = deepDiff.diff(this.oldPainting, this.painting);
-
-    if (!changes) {
-        return;
+    if (this.oldPainting.length === this.painting.length) {
+        if (this.painting.every((el, i) => el.toString() === this.oldPainting[i].toString())) {
+            return;
+        }
     }
 
-    changes = changes.filter(function (change) {
-        return change.kind === 'E';
-    });
-
-    if (changes.length) {
-        this.undoHistory.push(changes);
-        this.undoHistory.splice(0, this.undoHistory.length - MAX_HISTORY);
-        this.redoHistory.length = 0;
-    }
+    this.undoHistory.push(clone(this.oldPainting));
+    this.undoHistory.splice(0, this.undoHistory.length - MAX_HISTORY);
+    this.redoHistory.length = 0;
 }
 
 
@@ -78,7 +66,7 @@ type GridPaintTools =
     'clear' | 'undo'  | 'redo';
 
 // fill in grid units one by one
-function    pencil(this: gp): void {
+function pencil(this: gp): void {
     const x = this.cursor.x;
     const y = this.cursor.y;
 
@@ -93,7 +81,6 @@ function redo(this: gp): void {
         this, [
             this.redoHistory,
             this.undoHistory,
-            deepDiff.applyChange,
         ],
     );
 }
@@ -103,7 +90,6 @@ function undo(this: gp): void {
         this, [
             this.undoHistory,
             this.redoHistory,
-            deepDiff.revertChange,
         ],
     );
 }

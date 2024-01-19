@@ -36,8 +36,8 @@ declare class GridPaint {
     };
     painting: number[][];
     oldPainting: number[][];
-    redoHistory: any[];
-    undoHistory: any[];
+    redoHistory: number[][][];
+    undoHistory: number[][][];
     events: GridPaintHandlers;
     resizeEvent: (this: GridPaint) => void;
     tool: GridPaintActionTools;

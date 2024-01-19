@@ -1,6 +1,1 @@
-/*!
- * deep-diff.
- * Licensed under the MIT License.
- */
-
 /*! @source http://purl.eligrey.com/github/FileSaver.js/blob/master/FileSaver.js */
