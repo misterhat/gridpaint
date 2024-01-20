@@ -1,10 +1,7 @@
-"use strict";
 // Copyright (C) 2016  Zorian Medwin
 // Copyright (C) 2021  Anthony DeDominic
 // See COPYING for License
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.detach = exports.attach = exports.Handlers = void 0;
-const browser_1 = require("./browser");
+import { isBrowser } from './browser.js';
 function clone(obj) {
     return JSON.parse(JSON.stringify(obj));
 }
@@ -62,10 +59,9 @@ function Handlers(that) {
         },
     };
 }
-exports.Handlers = Handlers;
 // activate event handlers
 function attach() {
-    if (!browser_1.isBrowser)
+    if (!isBrowser)
         return;
     Object.keys(this.events).forEach(e => {
         this.canvas.addEventListener(e, this.events[e], false);
@@ -74,10 +70,9 @@ function attach() {
     window.addEventListener('pointerup', this.events.pointerup, false);
     window.addEventListener('resize', this.resizeEvent, false);
 }
-exports.attach = attach;
 // remove all the event listeners & cease the draw loop
 function detach() {
-    if (!browser_1.isBrowser)
+    if (!isBrowser)
         return;
     Object.keys(this.events).forEach(e => {
         this.canvas.removeEventListener(e, this.events[e], false);
@@ -85,4 +80,4 @@ function detach() {
     window.removeEventListener('pointerup', this.events.pointerup, false);
     window.removeEventListener('resize', this.resizeEvent, false);
 }
-exports.detach = detach;
+export { Handlers, attach, detach };

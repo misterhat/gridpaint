@@ -1,9 +1,6 @@
-"use strict";
 // Copyright (C) 2017  Zorian Medwin
 // Copyright (C) 2021  Anthony DeDominic
 // See COPYING for License
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.clear = void 0;
 // Empty all of the grid units.
 // Technically also initializes painting and oldPainting
 function clear(init = false) {
@@ -22,4 +19,4 @@ function clear(init = false) {
     this.line(/* cancel any line action */ true);
     this.compareChanges();
 }
-exports.clear = clear;
+export { clear };

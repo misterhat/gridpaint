@@ -1,6 +1,6 @@
 'use strict';
 
-const { GridPaint } = require('../index');
+import { GridPaint } from '../index.js';
 
 // SEE GridPaintOptions for all valid options and their types
 const painter = new GridPaint({ width: 40, height: 20 });

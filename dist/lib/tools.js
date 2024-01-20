@@ -1,18 +1,10 @@
-"use strict";
 // Copyright (C) 2016  Zorian Medwin
 // Copyright (C) 2021  Anthony DeDominic
 // See COPYING for License
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.line_approx = exports.compare = exports.replace = exports.apply = exports.clear = exports.undo = exports.redo = exports.line = exports.bucket = exports.pencil = void 0;
-const bucket_1 = require("./bucket");
-Object.defineProperty(exports, "bucket", { enumerable: true, get: function () { return bucket_1.bucket; } });
-const clear_1 = require("./clear");
-Object.defineProperty(exports, "clear", { enumerable: true, get: function () { return clear_1.clear; } });
-const replace_1 = require("./replace");
-Object.defineProperty(exports, "replace", { enumerable: true, get: function () { return replace_1.replace; } });
-const line_1 = require("./line");
-Object.defineProperty(exports, "line", { enumerable: true, get: function () { return line_1.line; } });
-Object.defineProperty(exports, "line_approx", { enumerable: true, get: function () { return line_1.line_approx; } });
+import { bucket } from './bucket.js';
+import { clear } from './clear.js';
+import { replace } from './replace.js';
+import { line, line_approx } from './line.js';
 const MAX_HISTORY = 64;
 function clone(obj) {
     return JSON.parse(JSON.stringify(obj));
@@ -41,7 +33,6 @@ function apply(isApplied) {
         this.action();
     }
 }
-exports.apply = apply;
 /** compared oldPainting to painting & push the changes to history
  * @param state any object that returns on undo/redo.
  */
@@ -55,7 +46,6 @@ function compare() {
     this.undoHistory.splice(0, this.undoHistory.length - MAX_HISTORY);
     this.redoHistory.length = 0;
 }
-exports.compare = compare;
 // fill in grid units one by one
 function pencil() {
     const x = this.cursor.x;
@@ -64,7 +54,6 @@ function pencil() {
         this.painting[y][x] = this.colour;
     }
 }
-exports.pencil = pencil;
 // redo the last painting action performed (if any)
 function redo() {
     pushHistory.apply(this, [
@@ -72,7 +61,6 @@ function redo() {
         this.undoHistory,
     ]);
 }
-exports.redo = redo;
 // undo the last painting action performed (if any)
 function undo() {
     pushHistory.apply(this, [
@@ -80,4 +68,10 @@ function undo() {
         this.redoHistory,
     ]);
 }
-exports.undo = undo;
+export { 
+/* Action Tools */
+pencil, bucket, line, 
+/* Single Click Action Tools */
+redo, undo, clear, 
+/* These do not have "action()'s" */
+apply, replace, compare, line_approx, };

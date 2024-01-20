@@ -1,10 +1,7 @@
-"use strict";
 // Copyright (C) 2016  Zorian Medwin
 // Copyright (C) 2021  Anthony DeDominic
 // See COPYING for License
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.tick = exports.painting = exports.grid = exports.cursor = exports.background = void 0;
-// draw the checkered pattern to indicate transparency
+/** Draw the checkered pattern to indicate transparency. */
 function background() {
     let odd = false;
     const cw = this.cellWidth;
@@ -18,12 +15,12 @@ function background() {
         odd = !odd;
     }
 }
-exports.background = background;
-// overlap the current colour as a crosshair over the position it will be
-// applied to
-//
-// If this.previous_point is defined, this draws a Line of cursors to current
-// cursor point.
+/**
+ * Overlap the current colour as a crosshair over the position it will be
+ * applied to.
+ * If this.previous_point is defined, this draws a Line of cursors to current
+ * cursor point.
+ */
 function cursor() {
     if (this.cursor.x < 0 || this.cursor.y < 0) {
         return;
@@ -38,8 +35,7 @@ function cursor() {
         this.ctx.globalAlpha = 1;
     }
 }
-exports.cursor = cursor;
-// draw contrasting grid units
+/** Draw contrasting grid units. */
 function grid() {
     const cw = this.cellWidth;
     const ch = this.cellHeight;
@@ -57,7 +53,6 @@ function grid() {
         this.ctx.stroke();
     }
 }
-exports.grid = grid;
 /**
  * Draw the grid units onto a canvas.
  *
@@ -65,20 +60,18 @@ exports.grid = grid;
  * @param ctx   the canvas context to draw on.
  */
 function painting(scale = 1, ctx) {
-    var _a;
     const cw = this.cellWidth;
     const ch = this.cellHeight;
-    const local_ctx = ctx !== null && ctx !== void 0 ? ctx : this.ctx;
+    const local_ctx = ctx ?? this.ctx;
     for (let i = 0; i < this.height; i += 1) {
         for (let j = 0; j < this.width; j += 1) {
             local_ctx.fillStyle =
-                (_a = this.palette[this.painting[i][j]]) !== null && _a !== void 0 ? _a : 'rgba(0,0,0,0)';
+                this.palette[this.painting[i][j]] ?? 'rgba(0,0,0,0)';
             local_ctx.fillRect(j * cw * scale, i * ch * scale, cw * scale, ch * scale);
         }
     }
 }
-exports.painting = painting;
-// draw loop
+/** Draw loop. */
 function tick() {
     if (this.background) {
         this.drawBackground();
@@ -95,4 +88,4 @@ function tick() {
         window.requestAnimationFrame(this.boundDraw);
     }
 }
-exports.tick = tick;
+export { background, cursor, grid, painting, tick };

@@ -2,12 +2,12 @@
 // Copyright (C) 2021  Anthony DeDominic
 // See COPYING for License
 
-import { bucket } from './bucket';
-import { clear } from './clear';
-import { replace } from './replace';
-import { line, line_approx } from './line';
+import { bucket } from './bucket.js';
+import { clear } from './clear.js';
+import { replace } from './replace.js';
+import { line, line_approx } from './line.js';
 
-import type { GridPaint as gp } from '../index';
+import type { GridPaint as gp } from '../index.js';
 
 const MAX_HISTORY = 64;
 

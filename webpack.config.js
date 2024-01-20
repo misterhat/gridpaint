@@ -1,14 +1,11 @@
 'use strict';
 
-const path = require('path');
+import { resolve, dirname } from 'path';
+import { fileURLToPath } from 'url';
 
-// Node.js 17+ broke MD4 style hashes, which breaks Webpack 5
-const crypto = require('crypto');
-const crypto_orig_createHash = crypto.createHash;
-// gotta love monkey patching
-crypto.createHash = algorithm => crypto_orig_createHash(algorithm === 'md4' ? 'sha256' : algorithm);
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
-module.exports = {
+export default {
     mode: 'production',
     entry: './examples/browser.js',
     module: {
@@ -21,6 +18,7 @@ module.exports = {
         ],
     },
     resolve: {
+        extensionAlias: { '.js': ['.js', '.ts'], },
         extensions: ['.ts', '.js'],
         alias: {
             pureimage: false,
@@ -29,6 +27,6 @@ module.exports = {
     },
     output: {
         filename: 'index.bundle.js',
-        path: path.resolve(__dirname, 'docs'),
+        path: resolve(__dirname, 'docs'),
     },
 };

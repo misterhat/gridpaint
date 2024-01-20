@@ -1,8 +1,5 @@
-"use strict";
 // Copyright (C) 2017  Anthony DeDominic
 // See COPYING for License
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.bucket = void 0;
 function bucket(replace, x, y) {
     const colour = this.colour;
     x = x !== undefined ? x : this.cursor.x;
@@ -30,4 +27,4 @@ function bucket(replace, x, y) {
         }
     }
 }
-exports.bucket = bucket;
+export { bucket };

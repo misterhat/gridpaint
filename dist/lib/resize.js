@@ -1,10 +1,7 @@
-"use strict";
 // Copyright (C) 2016  Zorian Medwin
 // Copyright (C) 2021  Anthony DeDominic
 // See COPYING for License
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.fitToWindow = exports.resize = void 0;
-const browser_1 = require("./browser");
+import { isBrowser } from './browser.js';
 function resize(w = 0, h = 0) {
     this.canvas.width = this.width * (w || this.cellWidth);
     this.canvas.height = this.height * (h || this.cellHeight);
@@ -12,9 +9,8 @@ function resize(w = 0, h = 0) {
     this.cellWidth = (w || this.cellWidth);
     this.cellHeight = (h || this.cellHeight);
 }
-exports.resize = resize;
 function fitToWindow() {
-    if (!browser_1.isBrowser)
+    if (!isBrowser)
         return;
     if (!this.canvas.parentElement)
         return;
@@ -42,4 +38,4 @@ function fitToWindow() {
     if (!this.drawing)
         this.draw();
 }
-exports.fitToWindow = fitToWindow;
+export { resize, fitToWindow };

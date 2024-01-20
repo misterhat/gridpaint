@@ -2,8 +2,8 @@
 // Copyright (C) 2021  Anthony DeDominic
 // See COPYING for License
 
-import type { GridPaint as gp } from '../index';
-import { isBrowser } from './browser';
+import type { GridPaint as gp } from '../index.js';
+import { isBrowser } from './browser.js';
 
 function resize(this: gp, w = 0, h = 0): void {
     this.canvas.width =  this.width  * (w || this.cellWidth);

@@ -1,17 +1,17 @@
-import * as draw from './lib/draw';
-import type { GridPaintHandlers } from './lib/handlers';
-import * as handlers from './lib/handlers';
-import { save } from './lib/save';
-import type { GridPaintTools, GridPaintActionTools } from './lib/tools';
-import * as tools from './lib/tools';
-import * as resizers from './lib/resize';
+import * as draw from './lib/draw.js';
+import type { GridPaintHandlers } from './lib/handlers.js';
+import * as handlers from './lib/handlers.js';
+import { save } from './lib/save.js';
+import type { GridPaintTools, GridPaintActionTools } from './lib/tools.js';
+import * as tools from './lib/tools.js';
+import * as resizers from './lib/resize.js';
 interface GridPaintOptions {
     width?: number;
     height?: number;
     cellWidth?: number;
     cellHeight?: number;
     palette?: string[];
-    outline: boolean;
+    outline?: boolean;
 }
 declare class GridPaint {
     width: number;
@@ -43,10 +43,18 @@ declare class GridPaint {
     tool: GridPaintActionTools;
     boundDraw: (this: GridPaint) => void;
     constructor(options: GridPaintOptions);
+    /** Sets up the painter for drawing */
     init(): void;
+    /** Destroys the painter, does not remove it from the dom.
+        you have to do that. */
     destroy(): void;
+    /** Setter that will clear line state for you. */
     setTool(tool: GridPaintActionTools): void;
+    /** Perform the current tool's action on the painting.
+        This should ideally be invoked only by an event handler. */
     action(): void;
+    /** These are tools not used (or should be used) in
+        event handlers. */
     singleAction(tool: GridPaintTools): void;
     bucket: typeof tools.bucket;
     clear: typeof tools.clear;

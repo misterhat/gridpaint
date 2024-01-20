@@ -1,9 +1,6 @@
-"use strict";
 // Copyright (C) 2016  Zorian Medwin
 // Copyright (C) 2021  Anthony DeDominic
 // See COPYING for License
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.replace = void 0;
 // replace all of a certain colour with another
 function replace(old, replace) {
     if (old === replace) {
@@ -25,4 +22,4 @@ function replace(old, replace) {
     }
     this.compareChanges();
 }
-exports.replace = replace;
+export { replace };

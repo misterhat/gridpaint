@@ -2,7 +2,7 @@
 // Copyright (C) 2021  Anthony DeDominic
 // See COPYING for License
 
-import type { GridPaint as gp } from '../index';
+import type { GridPaint as gp } from '../index.js';
 
 // replace all of a certain colour with another
 function replace(this: gp, old: number|string, replace: number|string): void {

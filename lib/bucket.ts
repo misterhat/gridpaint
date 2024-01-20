@@ -1,7 +1,7 @@
 // Copyright (C) 2017  Anthony DeDominic
 // See COPYING for License
 
-import type { GridPaint as gp } from '../index';
+import type { GridPaint as gp } from '../index.js';
 
 function bucket(this: gp, replace?: number, x?: number, y?: number): void {
     const colour = this.colour;

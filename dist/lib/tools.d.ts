@@ -1,8 +1,8 @@
-import { bucket } from './bucket';
-import { clear } from './clear';
-import { replace } from './replace';
-import { line, line_approx } from './line';
-import type { GridPaint as gp } from '../index';
+import { bucket } from './bucket.js';
+import { clear } from './clear.js';
+import { replace } from './replace.js';
+import { line, line_approx } from './line.js';
+import type { GridPaint as gp } from '../index.js';
 declare function apply(this: gp, isApplied?: boolean): void;
 /** compared oldPainting to painting & push the changes to history
  * @param state any object that returns on undo/redo.

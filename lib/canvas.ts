@@ -3,7 +3,7 @@
 // See COPYING for License
 
 import * as PImage from 'pureimage';
-import { isBrowser } from './browser';
+import { isBrowser } from './browser.js';
 
 let Canvas: (w: number, h: number) => HTMLCanvasElement;
 
@@ -17,10 +17,12 @@ if (isBrowser) {
 }
 else {
     Canvas = function (width: number, height: number): HTMLCanvasElement {
-        return PImage.make(
+        // Cooerce the pureimage return to HTMLCanvasElement, in non-browser contexts
+        // the actual HTML Canvas components are unused or will error anyhow.
+        return (PImage.make(
             width || 300,
             height || 150,
-        );
+        ) as any);
     };
 }
 

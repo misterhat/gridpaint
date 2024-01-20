@@ -1,4 +1,4 @@
-import type { GridPaint as gp } from '../index';
+import type { GridPaint as gp } from '../index.js';
 type GridPaintEventTargets = 'pointermove' | 'pointerdown' | 'pointerup' | 'pointerenter' | 'pointerout';
 type GridPaintHandlers = Record<GridPaintEventTargets, (e: PointerEvent) => void>;
 declare function Handlers(that: gp): GridPaintHandlers;

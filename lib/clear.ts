@@ -2,7 +2,7 @@
 // Copyright (C) 2021  Anthony DeDominic
 // See COPYING for License
 
-import type { GridPaint as gp } from '../index';
+import type { GridPaint as gp } from '../index.js';
 
 // Empty all of the grid units.
 // Technically also initializes painting and oldPainting

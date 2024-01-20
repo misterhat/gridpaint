@@ -2,9 +2,9 @@
 // Copyright (C) 2021  Anthony DeDominic
 // See COPYING for License
 
-import type { GridPaint as gp } from '../index';
+import type { GridPaint as gp } from '../index.js';
 
-// draw the checkered pattern to indicate transparency
+/** Draw the checkered pattern to indicate transparency. */
 function background(this: gp): void {
     let odd = false;
     const cw = this.cellWidth;
@@ -20,11 +20,12 @@ function background(this: gp): void {
     }
 }
 
-// overlap the current colour as a crosshair over the position it will be
-// applied to
-//
-// If this.previous_point is defined, this draws a Line of cursors to current
-// cursor point.
+/** 
+ * Overlap the current colour as a crosshair over the position it will be
+ * applied to.
+ * If this.previous_point is defined, this draws a Line of cursors to current
+ * cursor point.
+ */
 function cursor(this: gp): void {
     if (this.cursor.x < 0 || this.cursor.y < 0) {
         return;
@@ -42,7 +43,7 @@ function cursor(this: gp): void {
     }
 }
 
-// draw contrasting grid units
+/** Draw contrasting grid units. */
 function grid(this: gp): void {
     const cw = this.cellWidth;
     const ch = this.cellHeight;
@@ -88,7 +89,7 @@ function painting(this: gp, scale = 1, ctx?: CanvasRenderingContext2D): void {
     }
 }
 
-// draw loop
+/** Draw loop. */
 function tick(this: gp): void {
     if (this.background) {
         this.drawBackground();

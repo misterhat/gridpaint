@@ -18,15 +18,15 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-import { Canvas } from './lib/canvas';
-import * as draw from './lib/draw';
-import type { GridPaintHandlers } from './lib/handlers';
-import * as handlers from './lib/handlers';
-import { save } from './lib/save';
-import type { GridPaintTools, GridPaintActionTools } from './lib/tools';
-import * as tools from './lib/tools';
-import * as resizers from './lib/resize';
-import { isBrowser } from './lib/browser';
+import { Canvas } from './lib/canvas.js';
+import * as draw from './lib/draw.js';
+import type { GridPaintHandlers } from './lib/handlers.js';
+import * as handlers from './lib/handlers.js';
+import { save } from './lib/save.js';
+import type { GridPaintTools, GridPaintActionTools } from './lib/tools.js';
+import * as tools from './lib/tools.js';
+import * as resizers from './lib/resize.js';
+import { isBrowser } from './lib/browser.js';
 
 const DEFAULT_PALETTE: string[] = [
     'transparent', '#fff', '#c0c0c0', '#808080', '#000',
@@ -42,7 +42,7 @@ interface GridPaintOptions {
     cellWidth?: number,
     cellHeight?: number,
     palette?: string[],
-    outline: boolean,
+    outline?: boolean,
 }
 
 class GridPaint {
@@ -112,13 +112,8 @@ class GridPaint {
             this.canvas.className = 'gridpaint-canvas';
             this.canvas.style.cursor = 'crosshair';
             this.canvas.style.touchAction = 'none';
-
-            if (/firefox/i.test(navigator.userAgent)) {
-                this.canvas.style.imageRendering = '-moz-crisp-edges';
-            }
-            else {
-                this.canvas.style.imageRendering = 'pixelated';
-            }
+            // firefox should support this now.
+            this.canvas.style.imageRendering = 'pixelated';
 
             if (this.outline) {
                 this.canvas.style.outlineStyle = 'solid';
@@ -132,7 +127,7 @@ class GridPaint {
         this.clear(/* init */ true);
     }
 
-    // Sets up the painter for drawing
+    /** Sets up the painter for drawing */
     init(): void {
         this.attachHandlers();
         this.fitToWindow();
@@ -141,21 +136,21 @@ class GridPaint {
         this.draw();
     }
 
-    // Destroys the painter, does not remove it from the dom.
-    // you have to do that.
+    /** Destroys the painter, does not remove it from the dom.
+        you have to do that. */
     destroy(): void {
         this.detachHandlers();
         this.drawing = false;
     }
 
-    // Setter that will clear line state for you.
+    /** Setter that will clear line state for you. */
     setTool(tool: GridPaintActionTools): void {
         this.tool = tool;
         this.line(/* cancel */ true);
     }
 
-    // Perform the current tool's action on the painting.
-    // This should ideally be invoked only by an event handler.
+    /** Perform the current tool's action on the painting.
+        This should ideally be invoked only by an event handler. */
     action(): void {
         switch (this.tool) {
         case 'pencil': return this.pencil();
@@ -169,8 +164,8 @@ class GridPaint {
         }
     }
 
-    // These are tools not used (or should be used) in
-    // event handlers.
+    /** These are tools not used (or should be used) in
+        event handlers. */
     singleAction(tool: GridPaintTools): void {
         // Assume any pending line drawing is canceled.
         this.line(/* cancel */ true);

@@ -1,15 +1,21 @@
-"use strict";
 // Copyright (C) 2020  Anthony DeDominic
 // See COPYING for License
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.line = exports.line_approx = void 0;
+/** Stateful global for holding the start of a line drawing */
 const previous_point = { x: -1, y: -1 };
-// Detect if we are drawing a line or not
-// -1 being a sigil value indicating unset.
+/**
+ * Detect if we are drawing a line or not
+ * -1 being a sigil value indicating unset.
+ */
 function isPrevUnset() {
     return previous_point.x === -1 || previous_point.y === -1;
 }
-// Set prev to unset or values passed.
+/**
+ * Function to set the global line start state of this module.
+ * Given the function no parameters sets it back to default: (-1, -1).
+ *
+ * @param x the x value of the start of the line
+ * @param y the y value of the start of the line
+ */
 function setPrev(x = -1, y = -1) {
     previous_point.x = x;
     previous_point.y = y;
@@ -52,23 +58,23 @@ function* line_approx(x, y) {
     }
     return;
 }
-exports.line_approx = line_approx;
 /**
  * Draws a Line from start to finish.
  *
  * This function has two states:
- *   - starting, where previous_point is "unset."
+ *   - starting, where previous_point is unset.
  *   - ending,   where previous_point is set.
  * Initially the function is in the starting state.
  *
  * When called in starting state, the current cursor position
- * will be saved for ending state and will transition to the end state
- * When called in the ending state, the function will draw
- * to the canvas an approximate line between the starting cursor
- * state and the invoking cursor state.
+ * will be saved and will transition to the ending state.
  *
- * An optional parameter can be passed to cancel the end state
- * and restore it to the start state with no effect.
+ * When called in the ending state, the function will draw
+ * to the canvas an approximate line from the starting cursor
+ * state and the current cursor location.
+ *
+ * An optional parameter can be passed to reset the state back to start
+ *
  * @param cancel If true or truthy,
  *               it will cancel the starting line coordinates.
  */
@@ -86,4 +92,4 @@ function line(cancel) {
         setPrev();
     }
 }
-exports.line = line;
+export { line_approx, line };
