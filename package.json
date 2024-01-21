@@ -9,6 +9,8 @@
     "dist/*"
   ],
   "scripts": {
+    "lint": "npx eslint index.ts lib/*.ts",
+    "lint-fix": "npx eslint --fix index.ts lib/*.ts",
     "prepack": "npx tsc && npx webpack-cli",
     "test-browser": "xdg-open docs/index.html"
   },
@@ -35,10 +37,10 @@
   },
   "devDependencies": {
     "@tsconfig/node20": "^20.1.2",
-    "@typescript-eslint/eslint-plugin": "^4.16.1",
-    "@typescript-eslint/parser": "^4.16.1",
-    "eslint": "^7.21.0",
-    "ts-loader": "^8.0.17",
+    "@typescript-eslint/eslint-plugin": "^6.19.0",
+    "@typescript-eslint/parser": "^6.19.0",
+    "eslint": "^8.56.0",
+    "ts-loader": "^9.5.0",
     "typescript": "^5.3.3",
     "webpack": "^5.89.0",
     "webpack-cli": "^5.1.4"

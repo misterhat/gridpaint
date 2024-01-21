@@ -20,7 +20,7 @@ function background(this: gp): void {
     }
 }
 
-/** 
+/**
  * Overlap the current colour as a crosshair over the position it will be
  * applied to.
  * If this.previous_point is defined, this draws a Line of cursors to current

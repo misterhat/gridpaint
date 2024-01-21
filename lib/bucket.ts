@@ -12,7 +12,7 @@ function bucket(this: gp, replace?: number, x?: number, y?: number): void {
 
     const stack: { x: number, y: number }[] = [{ x, y }];
     while (stack.length !== 0) {
-        /// can never be undefined if stack.length > 0
+        // can never be undefined if stack.length > 0
         const { x, y } = stack.pop()!;
 
         if (replace === colour || this.painting[y][x] !== replace) {

@@ -69,7 +69,7 @@ function resizePainting(this: gp, w = 0, h = 0): void {
 
     if (delta_w > -1) {
         const center_left = delta_w / 2 | 0;
-        const center_right = delta_w / 2 + (delta_w & 1) | 0; 
+        const center_right = delta_w / 2 + (delta_w & 1) | 0;
         this.painting = this.painting.map(arr => {
             const tmp = Array.from({ length: center_left }, () => 0).concat(arr).concat(Array.from({ length: center_right }, () => 0));
             return tmp;
@@ -77,7 +77,7 @@ function resizePainting(this: gp, w = 0, h = 0): void {
     }
     else {
         const center_left = -(delta_w / 2) | 0;
-        const center_right = -(delta_w / 2) + (delta_w & 1) | 0; 
+        const center_right = -(delta_w / 2) + (delta_w & 1) | 0;
         this.painting.forEach(arr => {
             arr.splice(0, center_left);
             arr.splice(-center_right, center_right);

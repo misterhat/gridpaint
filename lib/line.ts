@@ -19,7 +19,7 @@ function isPrevUnset(): boolean {
  * Given the function no parameters sets it back to default: (-1, -1).
  *
  * @param x the x value of the start of the line
- * @param y the y value of the start of the line 
+ * @param y the y value of the start of the line
  */
 function setPrev(x = -1, y = -1): void {
     previous_point.x = x;

@@ -23,8 +23,8 @@ function pushHistory(this: gp, top: number[][][], bottom: number[][][]): void {
     if (top_canvas == null) {
         return;
     }
-    const oldh = top_canvas.length;  
-    const oldw = top_canvas[0].length;  
+    const oldh = top_canvas.length;
+    const oldw = top_canvas[0].length;
     bottom.push(this.painting.splice(0, this.painting.length));
     this.painting = top_canvas;
     if (oldh !== this.height) {

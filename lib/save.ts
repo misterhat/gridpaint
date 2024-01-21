@@ -29,13 +29,16 @@ async function convertToPng(canvas: any): Promise<Buffer> {
  *
  * @see https://github.com/eligrey/FileSaver.js
  */
- function click(node: HTMLElement) {
+function click(node: HTMLElement) {
     try {
         node.dispatchEvent(new MouseEvent('click'));
-    } catch (e) {
-        var evt = document.createEvent('MouseEvents');
-        evt.initMouseEvent('click', true, true, window, 0, 0, 0, 80,
-                            20, false, false, false, false, 0, null);
+    }
+    catch (e) {
+        const evt = document.createEvent('MouseEvents');
+        evt.initMouseEvent(
+            'click', true, true, window, 0, 0, 0, 80,
+            20, false, false, false, false, 0, null,
+        );
         node.dispatchEvent(evt);
     }
 }
@@ -58,14 +61,18 @@ function saveAs(blob: Blob, name: string) {
 
     // Support blobs
     a.href = URL.createObjectURL(blob);
-    setTimeout(function () { URL.revokeObjectURL(a.href) }, 4E4); // 40s
-    setTimeout(function () { click(a) }, 0);
+    setTimeout(function () {
+        URL.revokeObjectURL(a.href);
+    }, 4E4); // 40s
+    setTimeout(function () {
+        click(a);
+    }, 0);
 }
-  
+
 
 /**
  * Export the painting to file.
- * 
+ *
  * @param [file='painting.png'] The file name.
  * @param [scale=1]             How big to make the image.
  */
@@ -89,7 +96,7 @@ Promise<null|Blob|Buffer> {
         if (file === ':blob:') {
             return new Promise(resolve => {
                 exported.toBlob(blob => {
-                    resolve(blob)
+                    resolve(blob);
                 }, 'image/png');
             });
         }
