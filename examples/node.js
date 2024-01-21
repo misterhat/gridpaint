@@ -1,5 +1,5 @@
 'use strict';
-const { GridPaint } = require('../dist/index.js');
+import { GridPaint } from '../dist/index.js';
 
 const painter = new GridPaint({ width: 10, height: 10, cellWidth: 16 });
 const strokes = [
