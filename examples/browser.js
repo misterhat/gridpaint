@@ -40,7 +40,7 @@ painter.palette.forEach(function (colour, i) {
     b.style.border = '1px solid #000';
     b.style.marginRight = '4px';
     b.style.color = 'white';
-    b.innerText = '\xa0';
+    b.innerText = '\xA0';
     b.title = 'switch to ' + colour;
     b.onclick = function () {
         // where colour is an index into GridPaint#palette
@@ -102,8 +102,8 @@ actions.forEach(function (action) {
 });
 
 document.body.appendChild(d);
-
 d = document.createElement('div');
+
 f = document.createElement('select');
 t = document.createElement('select');
 b = document.createElement('button');
@@ -128,6 +128,39 @@ painter.palette.forEach(function (c) {
 d.appendChild(f);
 d.appendChild(t);
 d.appendChild(b);
+document.body.appendChild(d);
+d = document.createElement('div');
+
+const pw = document.createElement('p');
+const rw = document.createElement('input');
+const ph = document.createElement('p');
+const rh = document.createElement('input');
+const rb = document.createElement('button');
+
+pw.innerText = 'width\xA0';
+pw.style = 'display: inline-block; margin: 0; padding: 0;';
+rw.value = painter.width.toString();
+rw.type = 'number';
+
+ph.innerText = '\xA0height\xA0';
+ph.style = 'display: inline-block; margin: 0; padding: 0;';
+rh.value = painter.height.toString();
+rh.type = 'number';
+
+rb.innerText = 'resize';
+rb.onclick = function() {
+    const w = +rw.value;
+    const h = +rh.value;
+    painter.resizePainting(w, h);
+};
+
+
+d.appendChild(pw);
+d.appendChild(rw);
+d.appendChild(ph);
+d.appendChild(rh);
+d.appendChild(rb);
+
 document.body.appendChild(d);
 
 // Init attaches all event handlers and also automatically

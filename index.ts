@@ -205,6 +205,7 @@ class GridPaint {
     detachHandlers = handlers.detach;
 
     resize = resizers.resize;
+    resizePainting = resizers.resizePainting;
     fitToWindow = resizers.fitToWindow;
 }
 

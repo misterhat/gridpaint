@@ -25,6 +25,7 @@ export default {
             stream: false,
         },
     },
+    devtool: 'source-map',
     output: {
         filename: 'index.bundle.js',
         path: resolve(__dirname, 'docs'),
