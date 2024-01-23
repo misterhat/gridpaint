@@ -49,13 +49,13 @@ function resizePainting(this: gp, w = 0, h = 0): void {
         const center_bot = delta_h / 2 + (delta_h & 1) | 0;
 
         for (let i = 0; i < center_top; ++i) {
-            this.painting.push(Array.from({ length: new_width }));
+            this.painting.push(Array.from({ length: old_width }, () => 0));
         }
 
         this.painting = this.painting.concat(this.oldPainting.map(arr => Array.from(arr, el => el)));
 
         for (let i = 0; i < center_bot; ++i) {
-            this.painting.push(Array.from({ length: new_width }));
+            this.painting.push(Array.from({ length: old_width }, () => 0));
         }
     }
     else {
@@ -82,6 +82,16 @@ function resizePainting(this: gp, w = 0, h = 0): void {
             arr.splice(0, center_left);
             arr.splice(-center_right, center_right);
         });
+    }
+
+    if (this.painting.length != this.height) {
+        throw `Invalid height, expected ${new_height}, got ${this.painting.length}`;
+    }
+
+    for (let i = 0; i < this.painting.length; ++i) {
+        if (this.painting[i].length != this.width) {
+            throw `Invalid width at ${i}: expected ${new_width}, got ${this.painting[i].length}`;
+        }
     }
 
     this.compareChanges();
