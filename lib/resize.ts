@@ -84,15 +84,15 @@ function resizePainting(this: gp, w = 0, h = 0): void {
         });
     }
 
-    if (this.painting.length != this.height) {
-        throw `Invalid height, expected ${new_height}, got ${this.painting.length}`;
-    }
+    // if (this.painting.length != this.height) {
+    //     throw `Invalid height, expected ${new_height}, got ${this.painting.length}`;
+    // }
 
-    for (let i = 0; i < this.painting.length; ++i) {
-        if (this.painting[i].length != this.width) {
-            throw `Invalid width at ${i}: expected ${new_width}, got ${this.painting[i].length}`;
-        }
-    }
+    // for (let i = 0; i < this.painting.length; ++i) {
+    //     if (this.painting[i].length != this.width) {
+    //         throw `Invalid width at ${i}: expected ${new_width}, got ${this.painting[i].length}`;
+    //     }
+    // }
 
     this.compareChanges();
     this.draw();
