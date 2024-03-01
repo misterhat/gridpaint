@@ -3,7 +3,7 @@
 // See COPYING for License
 
 import { bucket } from './bucket.js';
-import { clear } from './clear.js';
+import { clear, clearWith } from './clear.js';
 import { replace } from './replace.js';
 import { line, line_approx } from './line.js';
 
@@ -74,7 +74,7 @@ function compare(this: gp): void {
 type GridPaintActionTools =
     'pencil' | 'bucket' | 'line';
 type GridPaintTools =
-    'clear' | 'undo'  | 'redo';
+    'clear' | 'clear-with' | 'undo'  | 'redo';
 
 // fill in grid units one by one
 function pencil(this: gp): void {
@@ -115,6 +115,7 @@ export {
     redo,
     undo,
     clear,
+    clearWith,
 
     /* These do not have "action()'s" */
     apply,

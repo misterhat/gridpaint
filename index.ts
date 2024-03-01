@@ -43,6 +43,8 @@ interface GridPaintOptions {
     cellHeight?: number,
     palette?: string[],
     outline?: boolean,
+    grid?: boolean,
+    colour?: number,
 }
 
 class GridPaint {
@@ -92,8 +94,12 @@ class GridPaint {
             this.cellHeight = options.cellHeight;
         if (options.outline !== undefined)
             this.outline = options.outline;
+        if (options.grid !== undefined)
+            this.grid = options.grid;
         if (options.palette !== undefined && options.palette.length > 0)
             this.palette = options.palette;
+        if (options.colour !== undefined)
+            this.colour = options.colour;
 
         this.canvas = Canvas(
             this.width * this.cellWidth,
@@ -124,7 +130,7 @@ class GridPaint {
         // Used for requestAnimationFrame
         this.boundDraw = this.draw.bind(this);
         // init painting.
-        this.clear(/* init */ true);
+        this.clear(/* init */ true, /* default_color */ this.colour);
     }
 
     /** Sets up the painter for drawing */
@@ -173,6 +179,7 @@ class GridPaint {
         case 'undo':  return this.undo();
         case 'redo':  return this.redo();
         case 'clear': return this.clear();
+        case 'clear-with': return this.clearWith();
         default:
             console.error(
                 '<GridPaint>#singleAction() warning: Unknown tool to invoke: ' +
@@ -183,6 +190,8 @@ class GridPaint {
 
     bucket = tools.bucket;
     clear = tools.clear;
+    clearWith = tools.clearWith;
+
     pencil = tools.pencil;
     line = tools.line;
     redo = tools.redo;
