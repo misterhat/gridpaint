@@ -5,8 +5,8 @@
 import type { GridPaint as gp } from '../index.js';
 import { isBrowser } from './browser.js';
 
-function clone(obj: any): any {
-    return JSON.parse(JSON.stringify(obj));
+function clone_painting(painting: number[][]): number[][] {
+    return Array.from(painting, el => el.slice());
 }
 
 function calcPosition(this: gp, e: PointerEvent) {
@@ -47,7 +47,7 @@ function Handlers(that: gp): GridPaintHandlers {
             if (e.button !== 0) return;
             calcPos(e);
             // create a clone to compare changes for undo history
-            that.oldPainting = clone(that.painting);
+            that.oldPainting = clone_painting(that.painting);
             apply(true);
         },
         pointerup(e: PointerEvent) {

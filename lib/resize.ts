@@ -25,7 +25,7 @@ function resize(this: gp, w = 0, h = 0): void {
  *
  * @see GridPaint#fitToWindow
  */
-function resizePainting(this: gp, w = 0, h = 0): void {
+function resizePainting(this: gp, w = 0, h = 0, default_colour = 0): void {
     const new_width = w || this.width;
     const new_height = h || this.height;
     const old_width = this.width;
@@ -49,13 +49,13 @@ function resizePainting(this: gp, w = 0, h = 0): void {
         const center_bot = delta_h / 2 + (delta_h & 1) | 0;
 
         for (let i = 0; i < center_top; ++i) {
-            this.painting.push(Array.from({ length: old_width }, () => 0));
+            this.painting.push(Array.from({ length: old_width }, () => default_colour));
         }
 
         this.painting = this.painting.concat(this.oldPainting.map(arr => Array.from(arr, el => el)));
 
         for (let i = 0; i < center_bot; ++i) {
-            this.painting.push(Array.from({ length: old_width }, () => 0));
+            this.painting.push(Array.from({ length: old_width }, () => default_colour));
         }
     }
     else {
@@ -71,7 +71,10 @@ function resizePainting(this: gp, w = 0, h = 0): void {
         const center_left = delta_w / 2 | 0;
         const center_right = delta_w / 2 + (delta_w & 1) | 0;
         this.painting = this.painting.map(arr => {
-            const tmp = Array.from({ length: center_left }, () => 0).concat(arr).concat(Array.from({ length: center_right }, () => 0));
+            const tmp = Array
+                .from({ length: center_left }, () => default_colour)
+                .concat(arr)
+                .concat(Array.from({ length: center_right }, () => default_colour));
             return tmp;
         });
     }

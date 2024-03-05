@@ -26,7 +26,8 @@ function clear(this: gp, init = false, default_colour = 0): void {
 function clearWith(this: gp, colour = -1): void {
     if (colour === -1) {
         this.clear(false, this.colour);
-    } else {
+    }
+    else {
         this.clear(false, colour);
     }
 }

@@ -8,8 +8,8 @@ colour palettes and various tools such as bucket fill and undo.
 
 You can build/rebuild the example locally with:
 
-    $ npm run build-example
-    $ xdg-open docs/index.html
+    $ npm run prepack
+    $ npm run test-browser
 
 ## Installation
 
@@ -31,7 +31,7 @@ To be filled/updated.
 
 ^-- Example of an image made with pureimage on node.
 
-## Properties (Outdated, to be updated.)
+## Public properties of a GridPaint instance
 All of these properties can be adjusted on the fly and will be applied next
 animation frame.
 
@@ -42,42 +42,66 @@ painter.cellWidth = 16; // the width of each cell
 painter.cellHeight = painter.cellWidth; // the height of each cell
 
 painter.background = true; // draw the checkered transparent background
-painter.colour = 0; // the currently selected colour
-painter.cursor = { x: -1, y: -1 }; // crosshair location
-painter.grid = false; // display a contrasted grid over the image
+painter.colour = 0; // the currently selected colour in a palette; is an index.
+painter.cursor = { x: -1, y: -1 }; // crosshair location; more for the event handlers.
+painter.grid = false; // display grid lines that visually separate individual cells.
 painter.isApplied = false; // the status of mousedown
 // colours the image will contain
 painter.palette =  [ 'transparent', '#fff', '#c0c0c0', '#808080', '#000',
                      '#f00', '#800', '#ff0', '#808000', '#0f0', '#080', '#0ff',
                      '#008080', '#00f', '#000080', '#f0f', '#800080' ]
-// a 2D array painter.height x painter.width of palette indexes
+// 2D array: painting[row][column]. values in columns are an index into the current painter.palette.
 painter.painting = [ [], ... ];
 painter.tool = 'pencil'; // the currently selected tool (pencil or bucket)
 
-// stacks of deep-diff changes
+// Arrays containing copies of previous instances of painter.painting.
 painter.undoHistory = [];
 painter.redoHistory = [];
 
 // whether or not the draw loop is activated (activated after init() is called)
 painter.drawing = true;
 
-painter.dom = HTMLCanvasElement; // the DOM element to append to the document
+painter.canvas = HTMLCanvasElement; // the DOM element to append to the document
 ```
 
-## API (Outdated, to be updated.)
+## API
 ### new GridPaint(options)
 Create a new `painter` instance.
 
 `options` is an optional object that can contain the following properties (see
-above property definitions for defaults): `{ width, height, cellWidth,
-cellHeight, palette }`.
-
+above property definitions for defaults):
+```typescript
+interface GridPaintOptions {
+    width?: number,
+    height?: number,
+    cellWidth?: number,
+    cellHeight?: number,
+    palette?: string[],
+    outline?: boolean,
+    grid?: boolean,
+    colour?: number,
+}
+```
 ### painter.action()
-Apply the current tool to the canvas.
+Apply the current tool, at the current painter.cursor, to the canvas.
+
+Only GridPaintActionTools can be used:
+```typescript
+type GridPaintActionTools =
+    'pencil' | 'bucket' | 'line';
+```
+
+Usage example:
+```javascript
+painter.setTool('pencil');
+painter.cursor = { x: 1, y: 2 };
+painter.action();
+```
 
 ### painter.applyTool([isApplied])
 Apply (or unapply) whichever tool is selected to the canvas in the cursor's
-current position.
+current position. This is more a conveinence for built-in Event handling code
+and users will likely not use or want this.
 
 `isApplied` is a `Boolean` value. If not provided, `isApplied` is toggled
 instead.
@@ -85,14 +109,27 @@ instead.
 ### painter.bucket([replace, x, y])
 Fill in surrounding, like-coloured cells.
 
-`replace` is the colour index to replace. If not provided, the colour under `x`
-and `y` is used.
+`replace` is the colour index to replace. If not provided, the `colour` currently 
+set is used.
 
 `x` and `y` are the coordinates to begin the replacement process. If not
-provided, `cursor` position is used.
+provided, `cursor.x` and `cursor.y` is used.
 
-### painter.clear()
-Set all of the cells to the first colour in the palette.
+### painter.clear([init, default_colour])
+effectively delete the painting and replace every cell to a specific color.
+
+`init` is used to initialize the painting, do not set or set it to false.
+
+`default_colour` the color to set every cell in the painting with.
+The default value is 0.
+
+### painter.clearWith([colour])
+This is a convenience wrapper around painter.clear which sets init to false and
+if `colour` is not given, the current `painter.colour` is used instead.
+
+### painter.compare()
+After making changes to a painting (outside of event handlers) you can use this
+to detect and push changes to the history.
 
 ### painter.destroy()
 Remove event handlers and cease the draw loop (browser only).
@@ -107,14 +144,28 @@ Set the cell in cursor's position to the selected colour.
 Redo the last undo action.
 
 ### painter.replace(old, replace)
-Replace `old` colour with `replace` colour`.
+Replace `old` colour with `replace` colour.
 
 Both arguments can be either the position of a colour on the palette, or a
 string of the colour to be `indexOf`'d.
 
-### painter.resize()
-Set the painter's <canvas> element to the proper size. Call this if `width`,
-`height`, `cellWidth` or `cellHeight` are adjusted.
+### painter.fitToWindow()
+Adjusts the cellWidth and heights to make the canvas fit its parent
+element's size.
+
+### painter.resize([w, h])
+Resize the `painter.cellWidth` to `w` and `painter.cellHeight` to `h`.
+This also resizes the html `<canvas>` element that gridpaint uses.
+This is usually not used, consider `painter.fitToWindow()` instead.
+
+### painter.resizePainting([w, h, default_colour])
+*NOT TO BE CONFUSED WITH* `painter.resize()`.
+Physically grow or shrink the `painter.painting`.
+The function will attempt to center the existing content in the painting.
+Any new cells will be initialized with the colour of `default_colour`.
+If `default_colour` is not specified, `0` is used.
+
+Notes: undo and redo may grow or shrink your `painting` so be careful carrying
 
 ### painter.saveAs([file, scale])
 Export the painting as a PNG file.
@@ -127,30 +178,3 @@ will be half the original, `2` would be twice as large). Default: `1`.
 ### painter.undo()
 Undo the last action since the last tool was applied.
 
-## Events
-Events share the same names as the methods that trigger them. The following
-methods trigger events:
-
-```javascript
-[
-    'action',
-    'applyTool',
-    'clear',
-    'move',
-    'redo',
-    'replace',
-    'undo'
-]
-```
-
-## License
-Copyright (C) 2016 Mister Hat
-
-This library is free software; you can redistribute it and/or modify it under
-the terms of the GNU Lesser General Public License as published by the Free
-Software Foundation; either version 3.0 of the License, or (at your option) any
-later version.
-
-This library is distributed in the hope that it will be useful, but WITHOUT ANY
-WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
-PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
