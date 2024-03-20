@@ -1,2 +1,4 @@
 node_modules
-index.html
+docs/index.bundle.js.map
+docs/index.bundle.js.LICENSE.txt
+dist/
