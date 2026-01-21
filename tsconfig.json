@@ -1,0 +1,17 @@
+{
+    "extends": "@tsconfig/node22/tsconfig.json",
+    "compilerOptions": {
+        "declaration": true,
+        "erasableSyntaxOnly": true,
+        "outDir": "./dist/",
+        "noImplicitAny": true,
+        "module": "nodenext",
+        "target": "es2022",
+        "lib": [
+            "es6",
+            "dom"
+        ],
+        "allowJs": false
+    },
+    "include": [ "./lib/*", "./index.ts" ]
+}
